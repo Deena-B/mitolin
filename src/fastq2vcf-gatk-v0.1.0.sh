@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N fastq2abam
+#$ -N fastq2sam
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
@@ -10,7 +10,8 @@ module load java/1.8.0.111      # language of gatk & picard-tools
 module load gatk/4.1.2.0        # includes picard tools
 module load bwa/0.7.8           # aligner
 
-## to run a script on hpc use `qsub filename.sh`
+## to run a script on hpc use `qsub path/to/filename.sh`
+    ## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2vcf-gatk-v0.1.0.sh
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
 
