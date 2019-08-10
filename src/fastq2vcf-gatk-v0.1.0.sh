@@ -99,7 +99,7 @@ unpair='unpaired-'
 ## PU is not required by GATK
 ## SM is sample name
 ## PL is platform/technology used to sequence
-readgroupinfo='@RG'\t'ID:'${lib}\t'PU:'${lib}.${lane}.${bar1}${bar2}\t'SM:'${name}\t'PL:Illumina'\t'LB:'${lib}
+readgroupinfo='@RG\tID:'${lib}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:'${name}'\tPL:Illumina\tLB:'${lib}
 
 
 ##########################
