@@ -33,5 +33,5 @@ module load bwa/0.7.8
 ###############
 
 ## index the reference fasta
-bwa index -a bwtsw human_g1k_v37.fasta.gz
+bwa index -p human_g1k_v37_long -a bwtsw human_g1k_v37.fasta.gz
 
