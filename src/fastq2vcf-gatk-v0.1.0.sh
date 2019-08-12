@@ -78,6 +78,7 @@ ptable='posttable.csv'
 vcfext='.vcf'
 
 ## file prefixes
+aligned='aligned-'
 reord='reordered-'
 sort='sorted-'
 realign='realigned-'
@@ -117,11 +118,18 @@ path2output=$path2genomic$name'/'
 ## gatk best practice
 ######################
 
-## align reads to human_g1k_v37.fasta.gz
-bwa mem -M -t 32 -R $readgroupinfo \
+## align reads to human reference
+## `bwa mem [flags] ref.fa.gz r1.fq.gz r2.fq.gz > aligned-name.sam`
+## note: ref.fasta.fai and ref.dict can't be zipped!
+## http://bio-bwa.sourceforge.net/bwa.shtml
+## -M Mark shorter split hits as secondary (for Picard compatibility)
+## -t Number of threads
+## -R readgroup
+bwa mem -M -t 32 \
+    -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2output$name$samext
+    > $path2output$aligned$name$samext
 
 
 
