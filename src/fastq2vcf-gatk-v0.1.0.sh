@@ -9,9 +9,10 @@
 module load java/1.8.0.111      # language of gatk & picard-tools
 module load gatk/4.1.2.0        # includes picard tools
 module load bwa/0.7.8           # aligner
+module load samtools/1.9        # filter reads by quality score, convert sam2bam
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
-    ## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2vcf-gatk-v0.1.0.sh
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2vcf-gatk-v0.1.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
 
@@ -115,8 +116,22 @@ path2output=$path2genomic$name'/'
 
 
 ######################
-## gatk best practice
+## gatk pre-processing
 ######################
+
+## come back to this later
+## Make uBAM with Picard FastqToSam
+## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
+# java -jar picard.jar FastqToSam \
+#     F1=$path2fastq$name1wext \
+#     O=
+
+
+## repeat make uBAM for read2 files
+# java -jar picard.jar FastqToSam \
+#     F1=$path2fastq$name1wext \
+#     O=
+
 
 ## align reads to human reference
 ## `bwa mem [flags] ref.fa.gz r1.fq.gz r2.fq.gz > aligned-name.sam`
@@ -130,6 +145,30 @@ bwa mem -M -t 32 \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
     > $path2output$aligned$name$samext
+
+
+## create bam and filter reads by quality & location
+## `samtools view [options] input.sam [region]`
+## `-b` output files in BAM format
+## `-q` skip alignments with MAPQ score smaller than INT
+    ## - default [0]
+    ## use 20 according to Xu et al., eLife, 2019 
+## `-o FILE` sends output to FILE 
+## `chrM` output all alignments mapped to the reference sequence named `chrM` (i.e. @SQ SN:chrM)
+samtools view -b -q 20 \
+    -o $path$filter$aligned$name$bamext \
+    $path2output$aligned$name$samext chrM 
+
+
+## sort bam
+
+
+## create bam index
+
+
+
+## mark duplicates
+
 
 
 
