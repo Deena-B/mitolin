@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N bwa-index-bwtsw
+#$ -N bwa-idx-bwtsw
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
@@ -33,5 +33,8 @@ module load bwa/0.7.8
 ###############
 
 ## index the reference fasta
+## -p prefix (allows you to rename the output file prefix)
+    ## suffixes are .amb, .ann, .bwt, .pac, .sa
+## `-a bwtsw` for long sequences 
 bwa index -p human_g1k_v37_long -a bwtsw human_g1k_v37.fasta.gz
 
