@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N bwa-index
+#$ -N bwa-index-bwtsw
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
@@ -33,5 +33,5 @@ module load bwa/0.7.8
 ###############
 
 ## index the reference fasta
-bwa index human_g1k_v37.fasta.gz
+bwa index -a bwtsw human_g1k_v37.fasta.gz
 
