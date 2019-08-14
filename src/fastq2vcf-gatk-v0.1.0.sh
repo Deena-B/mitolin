@@ -5,20 +5,9 @@
 #$ -pe make 64
 #$ -t 1-10
 
-## load modules
-module load java/1.8.0.111      # language of gatk & picard-tools
-module load gatk/4.1.2.0        # includes picard tools
-module load bwa/0.7.8           # aligner
-module load samtools/1.9        # filter reads by quality score, convert sam2bam
-
-## to run a script on hpc use `qsub path/to/filename.sh`
-    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2vcf-gatk-v0.1.0.sh`
-## to check on the script's status: `qstat -u dalawson`
-## to stop a submitted project by job-ID number: `qdel job-ID-number`
-
-######################
-## create directories
-######################
+#############
+## Docstring
+#############
 
 ## before running this script
 ## make and move to this directory 
@@ -26,13 +15,32 @@ module load samtools/1.9        # filter reads by quality score, convert sam2bam
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
+## to run a script on hpc use `qsub path/to/filename.sh`
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2vcf-gatk-v0.1.0.sh`
+## to check on the script's status: `qstat -u dalawson`
+## to stop a submitted project by job-ID number: `qdel job-ID-number`
+
+## Picard-tools, which are wrapped in gatk, are Java Archive (JAR) file tools 
+## the following syntax should be followed
+## java -Xmx2g -jar JARfilename toolname
+    ## the -Xmx2g flag assigns Java Virtual Machine (JVM) 2GB of memory, this should work for most tools
+    ## the -jar flag indicates that a JAR file will follow
+    ## JARfilename for picard-tools is picard.jar
+    ## toolnames vary by task, flags for specific tools are covered below
+
+
+################################################
+## load modules, create variables & directories
+################################################
+
+## add packages to PATH
+module load java/1.8.0.111      # language of gatk & picard-tools
+module load gatk/4.1.2.0        # includes picard tools
+module load bwa/0.7.8           # aligner
+module load samtools/1.9        # filter reads by quality score, convert sam2bam
+
 ## make a directory for generated genomic files
 mkdir ../genomic/
-
-
-####################
-## create variables
-####################
 
 ## create absolute path2datadir
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
@@ -121,25 +129,26 @@ path2output=$path2genomic$name'/'
 
 ## come back to this later
 ## Make uBAM with Picard FastqToSam
-## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
-# java -jar picard.jar FastqToSam \
+    ## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
+# java -Xmx2g -jar picard.jar FastqToSam \
 #     F1=$path2fastq$name1wext \
 #     O=
 
 
-## repeat make uBAM for read2 files
-# java -jar picard.jar FastqToSam \
+## repeat make uBAM for read2 files or make this into a loop
+# java -Xmx2g -jar picard.jar FastqToSam \
 #     F1=$path2fastq$name1wext \
 #     O=
 
 
 ## align reads to human reference
-## `bwa mem [flags] ref.fa.gz r1.fq.gz r2.fq.gz > aligned-name.sam`
-## note: ref.fasta.fai and ref.dict can't be zipped!
-## http://bio-bwa.sourceforge.net/bwa.shtml
-## -M Mark shorter split hits as secondary (for Picard compatibility)
-## -t Number of threads
-## -R readgroup
+    ## `bwa mem [flags] ref.fa.gz r1.fq.gz r2.fq.gz > aligned-name.sam`
+    ## note: ref.fasta.fai and ref.dict can't be zipped!
+    ## http://bio-bwa.sourceforge.net/bwa.shtml
+    ## -M Mark shorter split hits as secondary (for Picard compatibility)
+    ## -t Number of threads
+    ## -R readgroup
+
 bwa mem -M -t 32 \
     -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
@@ -147,27 +156,53 @@ bwa mem -M -t 32 \
     > $path2output$aligned$name$samext
 
 
-## create bam and filter reads by quality & location
-## `samtools view [options] input.sam [region]`
-## `-b` output files in BAM format
-## `-q` skip alignments with MAPQ score smaller than INT
-    ## - default [0]
-    ## use 20 according to Xu et al., eLife, 2019 
-## `-o FILE` sends output to FILE 
-## `chrM` output all alignments mapped to the reference sequence named `chrM` (i.e. @SQ SN:chrM)
+## create bam and filter reads by quality & location using samtools view
+    ## http://www.htslib.org/doc/samtools.html
+    ## `samtools view [options] input.sam [region]`
+    ## `-b` output files in BAM format
+    ## `-q` skip alignments with MAPQ score smaller than INT
+        ## default [0]
+        ## use 20 according to Xu et al., eLife, 2019 
+    ## `-o FILE` sends output to FILE 
+    ## `chrM` output all alignments mapped to the reference sequence named `chrM` (i.e. @SQ SN:chrM)
+
 samtools view -b -q 20 \
-    -o $path$filter$aligned$name$bamext \
+    -o $path2output$filter$aligned$name$bamext \
     $path2output$aligned$name$samext chrM 
 
 
-## sort bam
+## delete this after I test SortSamSpark, see below
+## sort bam using picard-tool SortSam
+    ## https://broadinstitute.github.io/picard/command-line-overview.html#SortSam
+    ## 
+
+# java -Xmx2g -jar picard.jar SortSam \
+#     I=$path2output$filter$aligned$name$bamext \
+#     O=$path2output$sort$filter$aligned$name$bamext \
+#     SORT_ORDER=coordinate
 
 
-## create bam index
+## sort bam using gatk gatk SortSamSpark
+    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_pipelines_SortSamSpark.php
+    ## sorts reads by coordinate order  
 
+gatk SortSamSpark \
+    -I $path2output$filter$aligned$name$bamext \
+    -O $path2output$sort$filter$aligned$name$bamext
+
+
+## test if this works with gatk BuildBamIndex & gatk flags, rather than java options
+## create bam index using picard-tools BuildBamIndex
+    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_BuildBamIndex.php
+    ## generates a BAM index ".bai" file
+    ## input BAM file must be sorted in coordinate order
+
+java -Xmx2g -jar picard.jar BuildBamIndex \
+    I=$path2output$sort$filter$aligned$name$bamext
 
 
 ## mark duplicates
+    ## 
 
 
 
