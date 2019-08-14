@@ -197,8 +197,8 @@ gatk SortSamSpark \
     ## generates a BAM index ".bai" file
     ## input BAM file must be sorted in coordinate order
 
-java -Xmx2g -jar picard.jar BuildBamIndex \
-    I=$path2output$sort$filter$aligned$name$bamext
+gatk BuildBamIndex \
+    -I $path2output$sort$filter$aligned$name$bamext
 
 
 ## mark duplicates
