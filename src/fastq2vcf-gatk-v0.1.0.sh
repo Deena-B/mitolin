@@ -35,7 +35,7 @@
 
 ## add packages to PATH
 module load java/1.8.0.111      # language of gatk & picard-tools
-module load gatk/4.1.2.0        # includes picard tools
+module load gatk/4.1.3.0        # includes picard tools
 module load bwa/0.7.8           # aligner
 module load samtools/1.9        # filter reads by quality score, convert sam2bam
 
@@ -62,7 +62,7 @@ name1wext=`head -n $SGE_TASK_ID $r1list | tail -n 1 | cut -f1`
 name2wext=`head -n $SGE_TASK_ID $r2list | tail -n 1 | cut -f1`
 
 ## remove R# & ext from name
-## e.g. i1-lib001-L001-A01-TAAGGCGA-GCGTAAGA
+## e.g. name=i1-lib001-L001-A01-TAAGGCGA-GCGTAAGA
 name=${name1wext%'-R'[1-2].fastq.gz}
 
 ## assign variables to every piece of info in name
@@ -97,19 +97,21 @@ recal='recal-'
 proper='proper-'
 unpair='unpaired-'
 
-## define readgroupinfo variable
-## bwa uses RGinfo to label things as normal or tumor
-## A readgroup is a set of reads that were generated 
-    ## from a single run of a sequencing instrument.
+## define readgroupinfo variables
+## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
+    ## bwa uses RGinfo to label things as normal or tumor
     ## '\t' inserts tabs between variables 
-## ID is readgroup ID (one for each illumina run)
-## ID in this case is a library
-## PU is {FLOWCELL_BARCODE}.{LANE}.{SAMPLE_BARCODE}
-## PU takes precidence over ID for base recalibration, if present
-## PU is not required by GATK
-## SM is sample name
-## PL is platform/technology used to sequence
-readgroupinfo='@RG\tID:'${lib}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:'${name}'\tPL:Illumina\tLB:'${lib}
+    ## ID = readgroup ID (one number for each sequencing run)
+        ## Illumina recommends ID = FLOWCELL_NAME.FLOWCELL_BC.LANEno
+        ## e.g. lib001.L001
+    ## PU = Platform Unit
+        ## PU is {FLOWCELL_BARCODE}.{LANE}.{SAMPLE_BARCODE}
+        ## PU takes precidence over ID for base recalibration, if present
+        ## PU is not required by GATK
+    ## SM is sample name
+    ## PL is platform/technology used to sequence
+    ## LB is DNA preparation library identifier 
+readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:'${name}'\tPL:Illumina\tLB:'${lib}
 
 
 ##########################
@@ -215,6 +217,8 @@ gatk MarkDuplicates \
     -O $path2output$dupm$sort$filter$aligned$name$bamext \
     -M $path2output'lib_complexity_metrics_from_markdups'$name'.txt'
 
+# next add create index ^
+# check remove duplicates = True as default ^
 
 
 
