@@ -39,20 +39,23 @@ module load gatk/4.1.3.0        # includes picard tools
 module load bwa/0.7.8           # aligner
 module load samtools/1.9        # filter reads by quality score, convert sam2bam
 
-## make a directory for generated genomic files
-mkdir ../genomic/
-mkdir ../genomic/ubams/
-
-## create absolute path2datadir
+# create path variables to access and deposit data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
-
-## create path2fastq holding directory variable
 path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
-
-# create path to deposit data
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/genomic/'
+path2ubams=${path2genomic}'ubams/'
+path2aligned=${path2genomic}'aligned/'
+path2cells=${path2genomic}'cells/'
+path2cell=$path2cells$cell'/'
 
-## create varibles for lists of files
+## make directories for each path above
+mkdir $path2genomic
+mkdir $path2ubams
+mkdir $path2aligned
+mkdir $path2cells
+mkdir $path2cell
+
+## create varibles for lists of fastq files
 r1list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r1list.txt'
 r2list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r2list.txt'
 
@@ -75,10 +78,6 @@ barcodes=${name:19}
 bar1=${name:19:8}
 bar2=${name:28}
 cell=${ind}'-'${lib}'-'${well}
-
-## create output path
-path2output=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/genomic/'
-path2ubams=${path2output}'ubams/'
 
 ## create filename extenstion variables
 samext='.sam'
@@ -121,17 +120,6 @@ unpair='unpaired-'
 readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:'${cell}'\tPL:Illumina\tLB:'${lib}
 
 
-##########################
-## create sub-directories
-##########################
-
-## make directory for each set of files
-mkdir $path2genomic$name
-
-## make path variable for file deposition
-path2output=$path2genomic$name'/'
-
-
 ######################
 ## gatk pre-processing
 ######################
@@ -162,7 +150,7 @@ bwa mem -M -t 32 \
     -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2output$aligned$name$samext
+    > $path2output$aligned$cell'-'$lane$samext
 
 
 ## create bam and filter reads by quality & location using samtools view
@@ -181,13 +169,18 @@ samtools view -b -q 20 \
 
 
 
-## merge bwa aligned, samtools filtered, bam files from the same cell
+## merge bwa aligned, samtools filtered, bam files with uBAM
+    ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
+            ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
+
+
+
+
+
+## merge aligned bams that have the same 'SM' (i.e. they are from the same cell)
     ## select all filenames with lane='L001' & store as L1_list, select all filenames with 'L002' & store as L2_list
     ## edit the filenames in the two lists to remove L1 or L2, assign to variables s1 and s2, respectively
     ## if s1=s2, merge bam files with filenames that include L001 and L002
-    ## is there a gatk merge bam files tool?
-        ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
-            ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
         ## MergeSamFiles - use to combine SAM and/or BAM files from different runs (Lanes) (same as samtools merge)
             ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_MergeSamFiles.php
             ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeSamFiles
