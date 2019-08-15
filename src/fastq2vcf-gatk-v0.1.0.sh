@@ -166,8 +166,8 @@ bwa mem -M -t 32 \
     ## `chrM` output all alignments mapped to the reference sequence named `chrM` (i.e. @SQ SN:chrM)
 
 samtools view -b -q 20 \
-    -o $path2output$filter$aligned$name$bamext \
-    $path2output$aligned$name$samext chrM 
+    -o $path2filtered$filter$aligned$cell'-'$lane$bamext \
+    $path2aligned$aligned$cell'-'$lane$samext chrM 
 
 
 
