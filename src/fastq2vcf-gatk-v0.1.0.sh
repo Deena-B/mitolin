@@ -46,6 +46,8 @@ path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/genomic/
 path2ubams=${path2genomic}'ubams/'
 path2aligned=${path2genomic}'aligned/'
 path2filtered=${path2genomic}'filtered/'
+path2uamerged=${path2genomic}'uamerged/'
+path2lanemerged=${path2genomic}'lanemerged/'
 path2cells=${path2genomic}'cells/'
 path2cell=$path2cells$cell'/'
 
@@ -54,6 +56,8 @@ mkdir $path2genomic
 mkdir $path2ubams
 mkdir $path2aligned
 mkdir $path2filtered
+mkdir $path2uamerged
+mkdir $path2lanemerged
 mkdir $path2cells
 mkdir $path2cell
 
@@ -93,17 +97,14 @@ vcfext='.vcf'
 ## file prefixes
 unaligned='unaligned-'
 aligned='aligned-'
-reord='reordered-'
-sort='sorted-'
-realign='realigned-'
-dupm='dupmark-'
 filter='filtered-'
-recal='recal-'
-proper='proper-'
-unpair='unpaired-'
+uamerged='uamerged-'
+readsmerged='readsmerged-'
+sort='sorted-'
+dupm='dupmark-'
 
 ## define readgroupinfo variables
-## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
+    ## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
     ## bwa uses RGinfo to label things as normal or tumor
     ## '\t' inserts tabs between variables 
     ## for ind1,2,3: lib.lane is used instead of flowcell name & barcode
@@ -170,13 +171,15 @@ samtools view -b -q 20 \
     $path2aligned$aligned$cell'-'$lane$samext chrM 
 
 
-
 ## merge bwa aligned, samtools filtered, bam files with uBAM
     ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
-            ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
+        ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
 
-
-
+gatk MergeBamAlignment \
+      -ALIGNED $path2filtered$filter$aligned$cell'-'$lane$bamext \
+      -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
+      -O $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
+      -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz'
 
 
 ## merge aligned bams that have the same 'SM' (i.e. they are from the same cell)
