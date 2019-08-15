@@ -210,10 +210,10 @@ gatk BuildBamIndex \
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php
     ## 
 
-gatk MarkDuplicatesSpark \
+gatk MarkDuplicates \
     -I $path2output$sort$filter$aligned$name$bamext \
     -O $path2output$dupm$sort$filter$aligned$name$bamext \
-    -M lib_complexity_metrics_from_markdups.txt
+    -M 'lib_complexity_metrics_from_markdups.txt'
 
 
 
