@@ -101,8 +101,8 @@ unpair='unpaired-'
 ## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
     ## bwa uses RGinfo to label things as normal or tumor
     ## '\t' inserts tabs between variables 
-    ## for this data, I will use lib.lane instead of flowcell name & barcode
-    ## this is okay since this dataset doesn't have any runs that contain mixed libraries
+    ## for ind1,2,3: lib.lane is used instead of flowcell name & barcode
+        ## this is okay since this dataset doesn't have any runs that contain mixed libraries
     ## ID = readgroup ID (one number for each sequencing run)
         ## Illumina recommends ID = FLOWCELL_NAME.FLOWCELL_BC.LANEno
         ## e.g. lib001.L001
