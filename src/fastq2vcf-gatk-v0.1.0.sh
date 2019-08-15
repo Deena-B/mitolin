@@ -198,19 +198,19 @@ gatk MergeBamAlignment \
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_pipelines_SortSamSpark.php
     ## sorts reads by coordinate order  
 
-gatk SortSamSpark \
-    -I $path2output$filter$aligned$name$bamext \
-    -O $path2output$sort$filter$aligned$name$bamext
+# gatk SortSamSpark \
+#     -I $path2output$filter$aligned$name$bamext \
+#     -O $path2output$sort$filter$aligned$name$bamext
 
 
 ## mark duplicates using gatk MarkDuplicatesSpark
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php
     ## 
 
-gatk MarkDuplicates \
-    -I $path2output$sort$filter$aligned$name$bamext \
-    -O $path2output$dupm$sort$filter$aligned$name$bamext \
-    -M $path2output'lib_complexity_metrics_from_markdups'$name'.txt'
+# gatk MarkDuplicates \
+#     -I $path2output$sort$filter$aligned$name$bamext \
+#     -O $path2output$dupm$sort$filter$aligned$name$bamext \
+#     -M $path2output'lib_complexity_metrics_from_markdups'$name'.txt'
 
 # next add create index ^
 # check remove duplicates = True as default ^
