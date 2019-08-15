@@ -45,6 +45,7 @@ path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/genomic/'
 path2ubams=${path2genomic}'ubams/'
 path2aligned=${path2genomic}'aligned/'
+path2filtered=${path2genomic}'filtered/'
 path2cells=${path2genomic}'cells/'
 path2cell=$path2cells$cell'/'
 
@@ -52,6 +53,7 @@ path2cell=$path2cells$cell'/'
 mkdir $path2genomic
 mkdir $path2ubams
 mkdir $path2aligned
+mkdir $path2filtered
 mkdir $path2cells
 mkdir $path2cell
 
@@ -150,7 +152,7 @@ bwa mem -M -t 32 \
     -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2output$aligned$cell'-'$lane$samext
+    > $path2aligned$aligned$cell'-'$lane$samext
 
 
 ## create bam and filter reads by quality & location using samtools view
