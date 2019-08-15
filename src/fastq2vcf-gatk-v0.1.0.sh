@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N fastq2sam
+#$ -N fastq2markdups
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
@@ -198,12 +198,12 @@ gatk SortSamSpark \
     ## generates a BAM index ".bai" file
     ## input BAM file must be sorted in coordinate order
 
-# gatk BuildBamIndex \
-#     -I $path2output$sort$filter$aligned$name$bamext
+gatk BuildBamIndex \
+    -I $path2output$sort$filter$aligned$name$bamext
 
 
 ## note that .bai is after .bam
-## if this ^ doesn't work, add back in the line above 
+## if this ^ doesn't work, add back in the line above - done
 
 
 ## mark duplicates using gatk MarkDuplicatesSpark
