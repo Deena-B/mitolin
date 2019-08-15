@@ -196,19 +196,7 @@ gatk SortSamSpark \
     -O $path2output$sort$filter$aligned$name$bamext
 
 
-## I don't need this cuz sort generates a bai file
-## test if this works with gatk BuildBamIndex & gatk flags, rather than java options
-## create bam index using picard-tools BuildBamIndex
-    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_BuildBamIndex.php
-    ## generates a BAM index ".bai" file
-    ## input BAM file must be sorted in coordinate order
 
-# gatk BuildBamIndex \
-#     -I $path2output$sort$filter$aligned$name$bamext
-
-
-## note that .bai is after .bam
-## if this ^ doesn't work, add back in the line above - done
 
 
 ## mark duplicates using gatk MarkDuplicatesSpark
