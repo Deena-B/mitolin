@@ -198,8 +198,8 @@ gatk SortSamSpark \
     ## generates a BAM index ".bai" file
     ## input BAM file must be sorted in coordinate order
 
-gatk BuildBamIndex \
-    -I $path2output$sort$filter$aligned$name$bamext
+# gatk BuildBamIndex \
+#     -I $path2output$sort$filter$aligned$name$bamext
 
 
 ## note that .bai is after .bam
@@ -213,7 +213,7 @@ gatk BuildBamIndex \
 gatk MarkDuplicates \
     -I $path2output$sort$filter$aligned$name$bamext \
     -O $path2output$dupm$sort$filter$aligned$name$bamext \
-    -M 'lib_complexity_metrics_from_markdups.txt'
+    -M $path2output'lib_complexity_metrics_from_markdups'$name'.txt'
 
 
 
