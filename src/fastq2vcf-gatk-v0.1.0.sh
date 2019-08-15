@@ -101,6 +101,8 @@ unpair='unpaired-'
 ## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
     ## bwa uses RGinfo to label things as normal or tumor
     ## '\t' inserts tabs between variables 
+    ## for this data, I will use lib.lane instead of flowcell name & barcode
+    ## this is okay since this dataset doesn't have any runs that contain mixed libraries
     ## ID = readgroup ID (one number for each sequencing run)
         ## Illumina recommends ID = FLOWCELL_NAME.FLOWCELL_BC.LANEno
         ## e.g. lib001.L001
@@ -109,6 +111,7 @@ unpair='unpaired-'
         ## PU takes precidence over ID for base recalibration, if present
         ## PU is not required by GATK
     ## SM is sample name
+        ## e.g. i1-lib001-L001-A01-TAAGGCGA-GCGTAAGA
     ## PL is platform/technology used to sequence
     ## LB is DNA preparation library identifier 
 readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:'${name}'\tPL:Illumina\tLB:'${lib}
