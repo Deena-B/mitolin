@@ -176,15 +176,7 @@ samtools view -b -q 20 \
     $path2output$aligned$name$samext chrM 
 
 
-## delete this after I test SortSamSpark, see below
-## sort bam using picard-tool SortSam
-    ## https://broadinstitute.github.io/picard/command-line-overview.html#SortSam
-    ## 
 
-# java -Xmx2g -jar picard.jar SortSam \
-#     I=$path2output$filter$aligned$name$bamext \
-#     O=$path2output$sort$filter$aligned$name$bamext \
-#     SORT_ORDER=coordinate
 
 
 ## sort bam using gatk gatk SortSamSpark
@@ -194,9 +186,6 @@ samtools view -b -q 20 \
 gatk SortSamSpark \
     -I $path2output$filter$aligned$name$bamext \
     -O $path2output$sort$filter$aligned$name$bamext
-
-
-
 
 
 ## mark duplicates using gatk MarkDuplicatesSpark
