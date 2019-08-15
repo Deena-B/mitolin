@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 1-10
+#$ -t 1-4
 
 #############
 ## Docstring
@@ -211,9 +211,9 @@ gatk BuildBamIndex \
     ## 
 
 gatk MarkDuplicatesSpark \
-        -I $path2output$sort$filter$aligned$name$bamext \
-        -O $path2output$dupm$sort$filter$aligned$name$bamext \
-        -M 'lib_complexity_metrics_from_markdups.txt'
+    -I $path2output$sort$filter$aligned$name$bamext \
+    -O $path2output$dupm$sort$filter$aligned$name$bamext \
+    -M lib_complexity_metrics_from_markdups.txt
 
 
 
