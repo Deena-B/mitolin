@@ -142,8 +142,11 @@ gatk FastqToSam \
     -F1 $path2fastq$name1wext \
     -F2 $path2fastq$name2wext \
     -O $path2ubams$unaligned$cell'-'$lane$bamext \
+    -RG ${lib}'.'${lane} \
+    -PU ${lib}.${lane}.${bar1}${bar2} \
     -SM $cell \
-    -RG ${lib}'.'${lane}
+    -PL 'Illumina'
+    -LB $lib
 
 
 ## align reads to human reference
