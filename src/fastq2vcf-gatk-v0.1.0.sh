@@ -201,7 +201,7 @@ gatk MergeBamAlignment \
 
 samtools view -b -q 20 \
     -o $path2uamgfil$filter$uamerged$aligned$cell'-'$lane$bamext \
-    $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext chrM 
+    $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext MT 
 
 
 ## merge aligned bams that have the same 'SM' (i.e. they are from the same cell)
