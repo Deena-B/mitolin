@@ -186,7 +186,7 @@ bwa mem -M -t 32 \
         ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
 gatk MergeBamAlignment \
-      -ALIGNED $path2filtered$filter$aligned$cell'-'$lane$bamext \
+      -ALIGNED $path2aligned$aligned$cell'-'$lane$samext \
       -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
       -O $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
       -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
