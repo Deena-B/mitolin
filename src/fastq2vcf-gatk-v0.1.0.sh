@@ -176,13 +176,16 @@ samtools view -b -q 20 \
 
 ## merge bwa aligned, samtools filtered, bam files with uBAM
     ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
+    ## produces a third SAM or BAM file of aligned and unaligned reads
         ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
+        ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
 java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
       ALIGNED=$path2filtered$filter$aligned$cell'-'$lane$bamext \
       UNMAPPED=$path2ubams$unaligned$cell'-'$lane$bamext \
       O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
       R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz'
+      PAIRED_RUN=TRUE
 
 
 ## merge aligned bams that have the same 'SM' (i.e. they are from the same cell)
@@ -196,7 +199,7 @@ java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
 
 
 
-
+## output of MergeBamAlignment is by default sorted by coordinate order, so I probably don't need 
 ## sort bam using gatk gatk SortSamSpark
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_pipelines_SortSamSpark.php
     ## sorts reads by coordinate order  
