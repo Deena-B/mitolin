@@ -145,7 +145,7 @@ gatk FastqToSam \
     -RG ${lib}'.'${lane} \
     -PU ${lib}.${lane}.${bar1}${bar2} \
     -SM $cell \
-    -PL 'Illumina'
+    -PL 'Illumina' \
     -LB $lib
 
 
