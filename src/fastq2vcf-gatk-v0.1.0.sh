@@ -50,7 +50,7 @@ path2filtered=${path2genomic}'filtered/'
 path2uamerged=${path2genomic}'uamerged/'
 path2lanemerged=${path2genomic}'lanemerged/'
 path2cells=${path2genomic}'cells/'
-path2cell=$path2cells$cell'/'
+path2cell=${path2cells}${cell}'/'
 
 ## make directories for each path above
 mkdir $path2genomic
@@ -60,7 +60,6 @@ mkdir $path2filtered
 mkdir $path2uamerged
 mkdir $path2lanemerged
 mkdir $path2cells
-mkdir $path2cell
 
 ## create varibles for lists of fastq files
 r1list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r1list.txt'
@@ -85,6 +84,9 @@ barcodes=${name:19}
 bar1=${name:19:8}
 bar2=${name:28}
 cell=${ind}'-'${lib}'-'${well}
+
+## mkdir
+mkdir $path2cell
 
 ## create filename extenstion variables
 samext='.sam'
