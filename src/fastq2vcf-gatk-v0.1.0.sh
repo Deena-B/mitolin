@@ -184,7 +184,7 @@ java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
       ALIGNED=$path2filtered$filter$aligned$cell'-'$lane$bamext \
       UNMAPPED=$path2ubams$unaligned$cell'-'$lane$bamext \
       O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
-      R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz'
+      R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
       PAIRED_RUN=TRUE
 
 
