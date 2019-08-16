@@ -35,8 +35,8 @@
 
 ## add packages to PATH
 module load java/1.8.0.111      # language of gatk & picard-tools
-module load picard-tools/1.96   # for generating uBAM & merging uBAM w aBAM
-module load gatk/4.1.3.0        # includes picard tools
+# module load picard-tools/1.96   # for generating uBAM & merging uBAM w aBAM
+module load gatk/4.1.2.0        # includes picard tools
 module load bwa/0.7.8           # aligner
 module load samtools/1.9        # filter reads by quality score, convert sam2bam
 
