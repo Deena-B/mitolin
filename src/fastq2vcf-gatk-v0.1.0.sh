@@ -176,11 +176,11 @@ samtools view -b -q 20 \
     ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
         ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
 
-gatk MergeBamAlignment \
-      -ALIGNED $path2filtered$filter$aligned$cell'-'$lane$bamext \
-      -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
-      -O $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
-      -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz'
+java -Xmx2g -jar picard.jar MergeBamAlignment \
+      ALIGNED=$path2filtered$filter$aligned$cell'-'$lane$bamext \
+      UNMAPPED=$path2ubams$unaligned$cell'-'$lane$bamext \
+      O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
+      R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz'
 
 
 ## merge aligned bams that have the same 'SM' (i.e. they are from the same cell)
