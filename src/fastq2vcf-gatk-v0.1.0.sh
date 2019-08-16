@@ -85,7 +85,7 @@ bar1=${name:19:8}
 bar2=${name:28}
 cell=${ind}'-'${lib}'-'${well}
 
-## mkdir
+## make directory for individual cells
 mkdir $path2cell
 
 ## create filename extenstion variables
