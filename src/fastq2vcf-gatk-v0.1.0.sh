@@ -134,7 +134,7 @@ readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:
     ## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
     ## put all outputs into one folder, so they are easy to access later
 
-java -Xmx2g -jar picard.jar FastqToSam \
+java -Xmx2g -jar picard.jar /data/apps/picard-tools/1.96/FastqToSam \
     F1=$path2fastq$name1wext \
     F2=$path2fastq$name2wext \
     O=$path2ubams$unaligned$cell'-'$lane$bamext \
@@ -176,7 +176,7 @@ samtools view -b -q 20 \
     ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
         ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
 
-java -Xmx2g -jar picard.jar MergeBamAlignment \
+java -Xmx2g -jar picard.jar /data/apps/picard-tools/1.96/MergeBamAlignment \
       ALIGNED=$path2filtered$filter$aligned$cell'-'$lane$bamext \
       UNMAPPED=$path2ubams$unaligned$cell'-'$lane$bamext \
       O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
