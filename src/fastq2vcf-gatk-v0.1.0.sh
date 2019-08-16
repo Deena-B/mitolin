@@ -34,11 +34,11 @@
 ################################################
 
 ## add packages to PATH
-module load java/1.8.0.111      # language of gatk & picard-tools
-# module load picard-tools/1.96   # for generating uBAM & merging uBAM w aBAM
-module load gatk/4.1.2.0        # includes picard tools
-module load bwa/0.7.8           # aligner
-module load samtools/1.9        # filter reads by quality score, convert sam2bam
+module load java/1.8.0.111          # language of gatk & picard-tools
+# module load picard-tools/1.96     # for generating uBAM & merging uBAM w aBAM
+module load gatk/4.1.2.0            # includes picard tools
+module load bwa/0.7.17-5            # aligner
+module load samtools/1.9            # view (filter/convert) sort index
 
 # create path variables to access and deposit data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
@@ -156,6 +156,7 @@ gatk FastqToSam \
     ## -M Mark shorter split hits as secondary (for Picard compatibility)
     ## -t Number of threads
     ## -R readgroup
+    ## Error file report starts with "[M::main_mem]"
 
 bwa mem -M -t 32 \
     -R $readgroupinfo \
