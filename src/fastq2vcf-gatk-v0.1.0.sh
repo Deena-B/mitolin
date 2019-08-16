@@ -174,9 +174,9 @@ bwa mem -M -t 32 \
     ## `-o FILE` sends output to FILE 
     ## `chrM` output all alignments mapped to the reference sequence named `chrM` (i.e. @SQ SN:chrM)
 
-samtools view -b -q 20 \
-    -o $path2filtered$filter$aligned$cell'-'$lane$bamext \
-    $path2aligned$aligned$cell'-'$lane$samext chrM 
+# samtools view -b -q 20 \
+#     -o $path2filtered$filter$aligned$cell'-'$lane$bamext \
+#     $path2aligned$aligned$cell'-'$lane$samext chrM 
 
 
 ## merge bwa aligned, samtools filtered, bam files with uBAM
