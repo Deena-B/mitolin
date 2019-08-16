@@ -197,8 +197,8 @@ gatk MergeBamAlignment \
     ## need this step because samtools view requires an index file
     ## input BAM file must be sorted in coordinate order
 
-gatk BuildBamIndex \
-    -I $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext
+# gatk BuildBamIndex \
+#     -I $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext
 
 
 ## re-filter by quality & location
