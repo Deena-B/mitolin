@@ -188,6 +188,7 @@ java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
       O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
       R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
       PAIRED_RUN=TRUE
+      CREATE_INDEX=TRUE
 
 
 ## create bam index using picard BuildBamIndex
