@@ -48,6 +48,7 @@ path2ubams=${path2genomic}'ubams/'
 path2aligned=${path2genomic}'aligned/'
 path2filtered=${path2genomic}'filtered/'
 path2uamerged=${path2genomic}'uamerged/'
+path2uamgfil=${path2genomic}'uamgfil/'
 path2lanemerged=${path2genomic}'lanemerged/'
 path2cells=${path2genomic}'cells/'
 path2cell=${path2cells}${cell}'/'
@@ -58,6 +59,7 @@ mkdir $path2ubams
 mkdir $path2aligned
 mkdir $path2filtered
 mkdir $path2uamerged
+mkdir $path2uamgfil
 mkdir $path2lanemerged
 mkdir $path2cells
 
@@ -186,6 +188,13 @@ java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
       O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
       R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
       PAIRED_RUN=TRUE
+
+
+## re-filter by quality & location
+
+samtools view -b -q 20 \
+    -o $path2uamgfil$filter$uamerged$aligned$cell'-'$lane$bamext \
+    $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext chrM 
 
 
 ## merge aligned bams that have the same 'SM' (i.e. they are from the same cell)
