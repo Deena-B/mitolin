@@ -35,6 +35,7 @@
 
 ## add packages to PATH
 module load java/1.8.0.111      # language of gatk & picard-tools
+module load picard-tools/1.96   # for generating uBAM & merging uBAM w aBAM
 module load gatk/4.1.3.0        # includes picard tools
 module load bwa/0.7.8           # aligner
 module load samtools/1.9        # filter reads by quality score, convert sam2bam
@@ -133,12 +134,12 @@ readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:
     ## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
     ## put all outputs into one folder, so they are easy to access later
 
-gatk FastqToSam \
-    -F1 $path2fastq$name1wext \
-    -F2 $path2fastq$name2wext \
-    -O $path2ubams$unaligned$cell'-'$lane$bamext \
-    -SM $cell \
-    -RG ${lib}'.'${lane}
+java -Xmx2g -jar picard.jar FastqToSam \
+    F1=$path2fastq$name1wext \
+    F2=$path2fastq$name2wext \
+    O=$path2ubams$unaligned$cell'-'$lane$bamext \
+    SM=$cell \
+    RG=${lib}'.'${lane}
 
 
 ## align reads to human reference
