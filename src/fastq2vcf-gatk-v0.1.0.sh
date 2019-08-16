@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 2-4
+#$ -t 1-296
 
 #############
 ## Docstring
@@ -177,7 +177,7 @@ bwa mem -M -t 32 \
 
 # samtools view -b -q 20 \
 #     -o $path2filtered$filter$aligned$cell'-'$lane$bamext \
-#     $path2aligned$aligned$cell'-'$lane$samext chrM 
+#     $path2aligned$aligned$cell'-'$lane$samext MT 
 
 
 ## merge bwa aligned, samtools filtered, bam files with uBAM
@@ -196,7 +196,7 @@ gatk MergeBamAlignment \
       --ALIGNED_READS_ONLY true 
 
 
-## re-filter by quality & location
+## filter by quality & location
     # input BAM file must have an index & be sorted in coordinate order 
 
 samtools view -b -q 20 \
@@ -211,6 +211,8 @@ samtools view -b -q 20 \
         ## MergeSamFiles - use to combine SAM and/or BAM files from different runs (Lanes) (same as samtools merge)
             ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_MergeSamFiles.php
             ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeSamFiles
+
+
 
 
 
