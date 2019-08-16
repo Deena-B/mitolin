@@ -138,12 +138,12 @@ readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:
     ## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
     ## put all outputs into one folder, so they are easy to access later
 
-java -Xmx2g -jar /data/apps/picard-tools/1.96/FastqToSam.jar \
-    F1=$path2fastq$name1wext \
-    F2=$path2fastq$name2wext \
-    O=$path2ubams$unaligned$cell'-'$lane$bamext \
-    SM=$cell \
-    RG=${lib}'.'${lane}
+gatk FastqToSam \
+    -F1 $path2fastq$name1wext \
+    -F2 $path2fastq$name2wext \
+    -O $path2ubams$unaligned$cell'-'$lane$bamext \
+    -SM $cell \
+    -RG ${lib}'.'${lane}
 
 
 ## align reads to human reference
@@ -182,13 +182,13 @@ samtools view -b -q 20 \
         ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
         ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
-java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
-      ALIGNED=$path2filtered$filter$aligned$cell'-'$lane$bamext \
-      UNMAPPED=$path2ubams$unaligned$cell'-'$lane$bamext \
-      O=$path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
-      R=$path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
-      PAIRED_RUN=TRUE
-      CREATE_INDEX=TRUE
+gatk MergeBamAlignment \
+      -ALIGNED $path2filtered$filter$aligned$cell'-'$lane$bamext \
+      -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
+      -O $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
+      -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
+      -PAIRED_RUN TRUE
+      -CREATE_INDEX TRUE
 
 
 ## create bam index using picard BuildBamIndex
