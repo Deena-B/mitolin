@@ -190,7 +190,18 @@ java -Xmx2g -jar /data/apps/picard-tools/1.96/MergeBamAlignment.jar \
       PAIRED_RUN=TRUE
 
 
+## create bam index using picard BuildBamIndex
+    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_BuildBamIndex.php
+    ## generates a BAM index ".bai" file
+    ## need this step because samtools view requires an index file
+    ## input BAM file must be sorted in coordinate order
+
+gatk BuildBamIndex \
+    -I $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext
+
+
 ## re-filter by quality & location
+    # input BAM file must be sorted in coordinate order 
 
 samtools view -b -q 20 \
     -o $path2uamgfil$filter$uamerged$aligned$cell'-'$lane$bamext \
