@@ -1,0 +1,3 @@
+filtered-uamerged-aligned-i1-lib001-A01-L002.bam
+filtered-uamerged-aligned-i1-lib001-A02-L002.bam
+filtered-uamerged-aligned-i1-lib001-A03-L002.bam
