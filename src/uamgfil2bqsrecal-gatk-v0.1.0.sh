@@ -95,11 +95,11 @@ dupm='dupmark-'
             ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_MergeSamFiles.php
             ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeSamFiles
 
-gatk MergeSamFiles \
-    -I ${path2bam}${name1wext} \
-    -I ${path2bam}${name2wext} \
-    -O ${path2lanemerged}${name}${bamext} \
-    --CREATE_INDEX true
+# gatk MergeSamFiles \
+#     -I ${path2bam}${name1wext} \
+#     -I ${path2bam}${name2wext} \
+#     -O ${path2lanemerged}${name}${bamext} \
+#     --CREATE_INDEX true
 
 
 ## mark duplicates using gatk MarkDuplicatesSpark
