@@ -96,8 +96,8 @@ dupm='dupmark-'
             ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeSamFiles
 
 gatk MergeSamFiles \
-    -I ${l1list} \
-    -I ${l2list} \
+    -I ${path2bam}${name1wext} \
+    -I ${path2bam}${name2wext} \
     -O ${path2lanemerged}${name}${bamext} \
     --CREATE_INDEX true
 
