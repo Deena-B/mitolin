@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 2-3
+#$ -t 1-118
 
 
 #############
@@ -102,19 +102,6 @@ gatk MergeSamFiles \
     --CREATE_INDEX true
 
 
-
-
-
-## output of MergeSamFiles is, by default, sorted by coordinate order, so I probably don't need 
-## sort bam using gatk gatk SortSamSpark
-    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_pipelines_SortSamSpark.php
-    ## sorts reads by coordinate order  
-
-# gatk SortSamSpark \
-#     -I $path2output$filter$aligned$name$bamext \
-#     -O $path2output$sort$filter$aligned$name$bamext
-
-
 ## mark duplicates using gatk MarkDuplicatesSpark
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php
     ## 
@@ -128,6 +115,15 @@ gatk MergeSamFiles \
 ## check remove duplicates = True as default ^
 
 
+
+## output of MergeSamFiles is, by default, sorted by coordinate order, so I probably don't need 
+## sort bam using gatk gatk SortSamSpark
+    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_pipelines_SortSamSpark.php
+    ## sorts reads by coordinate order  
+
+# gatk SortSamSpark \
+#     -I $path2output$filter$aligned$name$bamext \
+#     -O $path2output$sort$filter$aligned$name$bamext
 
 
 
