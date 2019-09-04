@@ -101,29 +101,12 @@ gatk MergeSamFiles \
     -O ${path2lanemerged}${name}${bamext} \
     --CREATE_INDEX true
 
-
-## mark duplicates using gatk MarkDuplicatesSpark
-    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_transforms_markduplicates_MarkDuplicatesSpark.php
-    ## 
-
-# gatk MarkDuplicates \
-#     -I $path2output$sort$filter$aligned$name$bamext \
-#     -O $path2output$dupm$sort$filter$aligned$name$bamext \
-#     -M $path2output'lib_complexity_metrics_from_markdups'$name'.txt'
-
-## next add create index ^
-## check remove duplicates = True as default ^
+## next 3-markdup2bqsr
 
 
 
-## output of MergeSamFiles is, by default, sorted by coordinate order, so I probably don't need 
-## sort bam using gatk gatk SortSamSpark
-    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/org_broadinstitute_hellbender_tools_spark_pipelines_SortSamSpark.php
-    ## sorts reads by coordinate order  
 
-# gatk SortSamSpark \
-#     -I $path2output$filter$aligned$name$bamext \
-#     -O $path2output$sort$filter$aligned$name$bamext
+
 
 
 
