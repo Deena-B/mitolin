@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 1-296
+#$ -t 2-4
 
 #############
 ## Docstring
@@ -33,7 +33,7 @@
 ## load modules, create variables & directories
 ################################################
 
-## add packages to PATH
+## on hpc add packages to PATH
 module load java/1.8.0.111          # language of gatk & picard-tools
 # module load picard-tools/1.96     # for generating uBAM & merging uBAM w aBAM
 module load gatk/4.1.2.0            # includes picard tools
@@ -44,24 +44,17 @@ module load samtools/1.9            # view (filter/convert) sort index
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/genomic/'
-path2ubams=${path2genomic}'ubams/'
-path2aligned=${path2genomic}'aligned/'
-path2filtered=${path2genomic}'filtered/'
-path2uamerged=${path2genomic}'uamerged/'
-path2uamgfil=${path2genomic}'uamgfil/'
-path2lanemerged=${path2genomic}'lanemerged/'
-path2cells=${path2genomic}'cells/'
-path2cell=${path2cells}${cell}'/'
+path2ubams=${path2genomic}'1-ubams/'
+path2aligned=${path2genomic}'2-aligned/'
+path2uamg=${path2genomic}'3-uamg/'
+path2filuamg=${path2genomic}'4-filuamg/'
 
 ## make directories for each path above
 mkdir $path2genomic
 mkdir $path2ubams
 mkdir $path2aligned
-mkdir $path2filtered
-mkdir $path2uamerged
-mkdir $path2uamgfil
-mkdir $path2lanemerged
-mkdir $path2cells
+mkdir $path2uamg
+mkdir $path2filuamg
 
 ## create varibles for lists of fastq files
 r1list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r1list.txt'
@@ -87,9 +80,6 @@ bar1=${name:19:8}
 bar2=${name:28}
 cell=${ind}'-'${lib}'-'${well}
 
-## make directory for individual cells
-mkdir $path2cell
-
 ## create filename extenstion variables
 samext='.sam'
 bamext='.bam'
@@ -102,11 +92,8 @@ vcfext='.vcf'
 ## file prefixes
 unaligned='unaligned-'
 aligned='aligned-'
-filter='filtered-'
-uamerged='uamerged-'
-readsmerged='readsmerged-'
-sort='sorted-'
-dupm='dupmark-'
+uamg='uamg-'
+filuamg='filuamg-'
 
 ## define readgroupinfo variables
     ## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
@@ -162,46 +149,31 @@ bwa mem -M -t 32 \
     -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2aligned$aligned$cell'-'$lane$samext
+    > $path2aligned$aligned$cell'-'$lane$samext 
 
 
-## create bam and filter reads by quality & location using samtools view
-    ## http://www.htslib.org/doc/samtools.html
-    ## `samtools view [options] input.sam [region]`
-    ## `-b` output files in BAM format
-    ## `-q` skip alignments with MAPQ score smaller than INT
-        ## default [0]
-        ## use 20 according to Xu et al., eLife, 2019 
-    ## `-o FILE` sends output to FILE 
-    ## `chrM` output all alignments mapped to the reference sequence named `chrM` (i.e. @SQ SN:chrM)
-
-# samtools view -b -q 20 \
-#     -o $path2filtered$filter$aligned$cell'-'$lane$bamext \
-#     $path2aligned$aligned$cell'-'$lane$samext MT 
-
-
-## merge bwa aligned, samtools filtered, bam files with uBAM
+## merge bwa aligned, (optionally samtools filtered), sam or bam files with uBAM files
     ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
     ## produces a third SAM or BAM file of aligned and unaligned reads
         ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
         ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
 gatk MergeBamAlignment \
-      -ALIGNED $path2aligned$aligned$cell'-'$lane$samext \
-      -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
-      -O $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext \
-      -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
-      -SO coordinate \
-      --CREATE_INDEX true \
-      --ALIGNED_READS_ONLY true 
+    -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
+    -ALIGNED $path2aligned$aligned$cell'-'$lane$samext \
+    -O $path2uamg$uamg$cell'-'$lane$bamext \
+    -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
+    -SO coordinate \
+    --CREATE_INDEX true \
+    --ALIGNED_READS_ONLY true 
 
 
 ## filter by quality & location
     # input BAM file must have an index & be sorted in coordinate order 
 
 samtools view -b -q 20 \
-    -o $path2uamgfil$filter$uamerged$aligned$cell'-'$lane$bamext \
-    $path2uamerged$uamerged$filter$aligned$cell'-'$lane$bamext MT 
+    -o $path2filuamg$filuamg$cell'-'$lane$bamext \
+    $path2uamg$uamg$cell'-'$lane$bamext MT 
 
 
 ## see ipynb *pairl1l2* for generation of lists of paired samples
