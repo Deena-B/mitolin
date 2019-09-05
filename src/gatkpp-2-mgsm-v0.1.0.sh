@@ -34,16 +34,13 @@ module load samtools/1.9            # view (filter/convert) sort index
 
 # create path variables to access and deposit data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
-path2bam=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2uamgfil/ind1/genomic/uamgfil/'
+path2bam=${path2datadir}'gen/nguyen_nc_2018/20190809-gatkpp1-fastq2uamgfil-DRB/ind1/genomic/4-filuamg/'
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190821-uamgfil2bqsrecal-DRB/ind1/genomic/'
-path2lanemerged=${path2genomic}'lanemerged/'
-path2cells=${path2genomic}'cells/'
-path2cell=${path2cells}${name}'/'
+path2luamgfil=${path2genomic}'luamgfil/'
 
 ## make directories for each path above
 mkdir $path2genomic
-mkdir $path2lanemerged
-mkdir $path2cells
+mkdir $path2luamgfil
 
 ## create variables for lists of bam files
 l1list=${path2datadir}'gen/nguyen_nc_2018/20190820-pairlanelists-DRB/lane1list-paired.txt'
@@ -60,9 +57,6 @@ name2wext=`head -n $SGE_TASK_ID $l2list | tail -n 1 | cut -f1`
 ## e.g. name=filtered-uamerged-aligned-i1-lib001-A01
 name=${name1wext%'-L00'[1-2].bam}
 
-## make directory for individual cells
-mkdir $path2cell
-
 ## create filename extenstion variables
 samext='.sam'
 bamext='.bam'
@@ -71,15 +65,6 @@ statext='.stat.txt'
 table='table.csv'
 ptable='posttable.csv'
 vcfext='.vcf'
-
-## file prefixes
-unaligned='unaligned-'
-aligned='aligned-'
-filter='filtered-'
-uamerged='uamerged-'
-lanesmerged='lanesmerged-'
-sort='sorted-'
-dupm='dupmark-'
 
 
 #############################
@@ -98,7 +83,7 @@ dupm='dupmark-'
 gatk MergeSamFiles \
     -I ${path2bam}${name1wext} \
     -I ${path2bam}${name2wext} \
-    -O ${path2lanemerged}${name}${bamext} \
+    -O ${path2luamgfil}${name}${bamext} \
     --CREATE_INDEX true
 
 ## next 3-markdup2bqsr
