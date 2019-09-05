@@ -56,6 +56,13 @@ mkdir $path2aligned
 mkdir $path2uamg
 mkdir $path2filuamg
 
+## make .keep files so folders are tracked by git
+touch $path2genomic/.keep
+touch $path2ubams/.keep
+touch $path2aligned/.keep
+touch $path2uamg/.keep
+touch $path2filuamg/.keep 
+
 ## create varibles for lists of fastq files
 r1list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r1list.txt'
 r2list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r2list.txt'
