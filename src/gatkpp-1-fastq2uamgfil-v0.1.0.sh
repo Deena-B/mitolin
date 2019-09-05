@@ -124,7 +124,7 @@ readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:
 gatk FastqToSam \
     -F1 $path2fastq$name1wext \
     -F2 $path2fastq$name2wext \
-    -O $path2ubams$unaligned$cell'-'$lane$bamext \
+    -O $path2ubams$cell'-'$lane$bamext \
     -RG ${lib}'.'${lane} \
     -PU ${lib}.${lane}.${bar1}${bar2} \
     -SM $cell \
@@ -145,7 +145,7 @@ bwa mem -M -t 32 \
     -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2aligned$aligned$cell'-'$lane$samext 
+    > $path2aligned$cell'-'$lane$samext 
 
 
 ## merge bwa aligned, (optionally samtools filtered), sam or bam files with uBAM files
@@ -155,9 +155,9 @@ bwa mem -M -t 32 \
         ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
 gatk MergeBamAlignment \
-    -UNMAPPED $path2ubams$unaligned$cell'-'$lane$bamext \
-    -ALIGNED $path2aligned$aligned$cell'-'$lane$samext \
-    -O $path2uamg$uamg$cell'-'$lane$bamext \
+    -UNMAPPED $path2ubams$cell'-'$lane$bamext \
+    -ALIGNED $path2aligned$cell'-'$lane$samext \
+    -O $path2uamg$cell'-'$lane$bamext \
     -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     -SO coordinate \
     --CREATE_INDEX true \
@@ -168,8 +168,8 @@ gatk MergeBamAlignment \
     # input BAM file must have an index & be sorted in coordinate order 
 
 samtools view -b -q 20 \
-    -o $path2filuamg$filuamg$cell'-'$lane$bamext \
-    $path2uamg$uamg$cell'-'$lane$bamext MT 
+    -o $path2filuamg$cell'-'$lane$bamext \
+    $path2uamg$cell'-'$lane$bamext MT 
 
 
 ## see ipynb *pairl1l2* for generation of lists of paired samples
