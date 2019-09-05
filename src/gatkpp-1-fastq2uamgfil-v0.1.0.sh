@@ -91,12 +91,6 @@ cell=${ind}'-'${lib}'-'${well}
 samext='.sam'
 bamext='.bam'
 
-## file prefixes
-unaligned='unaligned-'
-aligned='aligned-'
-uamg='uamg-'
-filuamg='filuamg-'
-
 ## define readgroupinfo variables
     ## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
     ## bwa uses RGinfo to label things as normal or tumor
