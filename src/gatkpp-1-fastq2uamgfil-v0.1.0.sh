@@ -173,4 +173,4 @@ samtools view -b -q 20 \
 
 
 ## see ipynb *pairl1l2* for generation of lists of paired samples
-## see script uamgfil2bqsrecal* for next steps
+## see script gatkpp-2* for next steps
