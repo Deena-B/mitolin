@@ -58,13 +58,7 @@ name2wext=`head -n $SGE_TASK_ID $l2list | tail -n 1 | cut -f1`
 name=${name1wext%'-L00'[1-2].bam}
 
 ## create filename extenstion variables
-samext='.sam'
 bamext='.bam'
-txtext='.txt'
-statext='.stat.txt'
-table='table.csv'
-ptable='posttable.csv'
-vcfext='.vcf'
 
 
 #############################
