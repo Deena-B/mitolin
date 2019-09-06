@@ -80,7 +80,7 @@ gatk MergeSamFiles \
     -O ${path2luamgfil}${name}${bamext} \
     --CREATE_INDEX true
 
-## next 3-markdup2bqsr
+## next gatkpp3-markdup2bqsr
 
 
 
