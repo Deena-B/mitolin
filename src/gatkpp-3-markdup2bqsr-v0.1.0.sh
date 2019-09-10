@@ -45,7 +45,7 @@ path2lists=${path2datadir}'gen/nguyen_nc_2018/20190906-celllist-DRB/'
 # create paths to deposit data
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190909-markdups-DRB/ind1/genomic/'
 path2dupsmarked=${path2genomic}'dupsmarked/'
-path2metrics=${path2genomic}'dupmetrics/'
+path2dupmetrics=${path2genomic}'dupmetrics/'
 
 ## make directories for each 'deposit data' path above
 mkdir $path2genomic
