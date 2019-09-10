@@ -54,7 +54,7 @@ mkdir $path2dupmetrics
 
 ## create variables for lists of bam files
 unpairedlist=${path2lists}'unpairedlist.txt'
-lmglist=${path2datadir}'lmglist.txt'
+lmglist=${path2lists}'lmglist.txt'
 
 ## create a name variable
 ## note this name has '.bam' extension included
