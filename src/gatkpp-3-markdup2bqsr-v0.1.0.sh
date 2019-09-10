@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 2-3
+#$ -t 1-118
 
 
 #############
@@ -13,7 +13,7 @@
 ## before running this script
 ## make and move to this directory 
 ## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/ \
-## 20190909-markdups-DRB/ind1/erroroutput/
+    ## 20190909-markdups-DRB/ind1/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
