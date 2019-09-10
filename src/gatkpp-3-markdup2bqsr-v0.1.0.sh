@@ -59,7 +59,7 @@ lmglist=${path2lists}'lmglist.txt'
 ## create a name variable
 ## note this name has '.bam' extension included
 ## e.g. i1-lib001-A01.bam
-namewext=`head -n $SGE_TASK_ID $lmglist | tail -n 1 | cut -f1`
+namewext=`head -n $SGE_TASK_ID $unpairedlist | tail -n 1 | cut -f1`
 
 ## remove ext from name
 ## e.g. name=i1-lib001-A01
@@ -89,7 +89,7 @@ vcfext='.vcf'
 
 # below currently only processes luamgfilbams
 gatk MarkDuplicates \
-    -I $path2luamgfilbam$name$bamext \
+    -I $path2filuamgbam$name$bamext \
     -O $path2dupsmarked$name$bamext \
     -M $path2dupmetrics$name'.txt' \
     --TAG_DUPLICATE_SET_MEMBERS true \
