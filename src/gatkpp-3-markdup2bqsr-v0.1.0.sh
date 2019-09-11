@@ -70,10 +70,6 @@ name=${namewext%'.bam'}
 samext='.sam'
 bamext='.bam'
 txtext='.txt'
-statext='.stat.txt'
-table='table.csv'
-ptable='posttable.csv'
-vcfext='.vcf'
 
 
 #############################
