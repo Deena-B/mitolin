@@ -123,6 +123,10 @@ erroroutput/
 *.error
 *.interval_list*
 
+# ignore any directory that ends with 'metrics'
+# e.g. ignore 'dupmetrics/'
+*metrics/*
+
 # dummy file 
 # so git acknowledges the presence of directories that only have ignored files
 # .keep
