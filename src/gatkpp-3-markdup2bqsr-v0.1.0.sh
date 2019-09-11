@@ -88,7 +88,7 @@ vcfext='.vcf'
     ## I think marking dups is enough for them to be exculded from vcf
     ## Inputs must be coordinate sorted
 
-# below currently only processes luamgfilbams
+# below currently only processes one of the two lists of samples
 gatk MarkDuplicates \
     -I $path2filuamgbam$name$bamext \
     -O $path2dupsmarked$name$bamext \
@@ -97,8 +97,7 @@ gatk MarkDuplicates \
     --CREATE_INDEX 
 
 
-## What goes next?
-
+## Next see qatkpp-4-bqsr
 
 
 
