@@ -125,7 +125,7 @@ erroroutput/
 
 # ignore any directory that ends with 'metrics'
 # e.g. ignore 'dupmetrics/'
-*metrics/*
+*metrics/
 
 # dummy file 
 # so git acknowledges the presence of directories that only have ignored files
