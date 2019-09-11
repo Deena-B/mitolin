@@ -39,6 +39,7 @@ path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 path2filuamgbam=${path2datadir}'gen/nguyen_nc_2018/20190809-gatkpp1-fastq2uamgfil-DRB/ind1/genomic/4-filuamg'
 # the path below is to lane-merged bam & bai files
 path2luamgfilbam=${path2datadir}'gen/nguyen_nc_2018/20190821-gatkpp2-lanesmerged-DRB/ind1/genomic/luamgfil/'
+
 # the path below has lists: unpairedlist.txt & lmglist.txt
 path2lists=${path2datadir}'gen/nguyen_nc_2018/20190906-celllist-DRB/'
 
