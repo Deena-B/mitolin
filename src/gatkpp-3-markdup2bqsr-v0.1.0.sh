@@ -36,7 +36,7 @@ module load samtools/1.9            # view (filter/convert) sort index
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 # the path below is to samples that were only run in a single lane
     # those listed in 'unpairedlist.txt'
-path2filuamgbam=${path2datadir}'gen/nguyen_nc_2018/20190809-gatkpp1-fastq2uamgfil-DRB/ind1/genomic/4-filuamg'
+path2filuamgbam=${path2datadir}'gen/nguyen_nc_2018/20190809-gatkpp1-fastq2uamgfil-DRB/ind1/genomic/4-filuamg/'
 # the path below is to lane-merged bam & bai files
 path2luamgfilbam=${path2datadir}'gen/nguyen_nc_2018/20190821-gatkpp2-lanesmerged-DRB/ind1/genomic/luamgfil/'
 
