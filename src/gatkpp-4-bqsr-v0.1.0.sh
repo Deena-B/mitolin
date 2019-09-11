@@ -78,12 +78,9 @@ vcfext='.vcf'
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_BaseRecalibrator.php
     ## generates a report file with tables
 
-
 gatk BaseRecalibrator \
    -I $path2bams$namewext \
-   -R reference.fasta \
-   --known-sites sites_of_variation.vcf \
-   --known-sites another/optional/setOfSitesToMask.vcf \
+   -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
    -O $path2baserecaltable$name'.table'
 
 
