@@ -80,7 +80,7 @@ vcfext='.vcf'
 
 gatk BaseRecalibrator \
    -I $path2bams$namewext \
-   -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
+   -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta' \
    --known-sites $path2datadir'ref/broad/bundles/b37/dbsnp_138.b37.vcf' \
    --known-sites $path2datadir'ref/broad/bundles/b37/Mills_and_1000G_gold_standard.indels.b37.vcf' \
    --known-sites $path2datadir'ref/broad/bundles/b37/1000G_phase1.indels.b37.vcf' \
