@@ -41,6 +41,7 @@ path2list=${path2bams}
 
 # create paths to deposit data
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190911-bqsr-DRB/genomic/'
+path2baserecaltable=${path2genomic}'baserecaltable/'
 path2bqsrbams=${path2genomic}'bqsrbams/'
 
 ## make directories for each 'deposit data' path above
