@@ -59,15 +59,6 @@ namewext=`head -n $SGE_TASK_ID $dupsmarkedlist | tail -n 1 | cut -f1`
 ## e.g. name=i1-lib001-A01
 name=${namewext%'.bam'}
 
-## create filename extenstion variables
-samext='.sam'
-bamext='.bam'
-txtext='.txt'
-statext='.stat.txt'
-table='table.csv'
-ptable='posttable.csv'
-vcfext='.vcf'
-
 
 #############################
 ## gatk pre-processing con't
@@ -87,6 +78,6 @@ gatk BaseRecalibrator \
    -O $path2baserecaltable$name'.table'
 
 
-
+## Next run gatkpp-5-applybqsr-v0.1.0.sh
 
 
