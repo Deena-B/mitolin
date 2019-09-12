@@ -41,11 +41,11 @@ path2list=${path2bams}
 
 # create paths to deposit data
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190911-bqsr-DRB/genomic/'
-path2baserecaltable=${path2genomic}'baserecaltable/'
+path2baserecaltables=${path2genomic}'baserecaltables/'
 
 ## make directories for each 'deposit data' path above
 mkdir $path2genomic
-mkdir $path2baserecaltable
+mkdir $path2baserecaltables
 
 ## create variables for list of bam files
 dupsmarkedlist=${path2list}'dupsmarkedlist.txt'
@@ -65,7 +65,7 @@ name=${namewext%'.bam'}
 #############################
 
 
-## generate baserecaltable using BaseRecalibrator
+## generate baserecaltables using BaseRecalibrator
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_BaseRecalibrator.php
     ## generates a report file with tables
 
@@ -75,7 +75,7 @@ gatk BaseRecalibrator \
    --known-sites $path2datadir'ref/broad/bundles/b37/dbsnp_138.b37.vcf' \
    --known-sites $path2datadir'ref/broad/bundles/b37/Mills_and_1000G_gold_standard.indels.b37.vcf' \
    --known-sites $path2datadir'ref/broad/bundles/b37/1000G_phase1.indels.b37.vcf' \
-   -O $path2baserecaltable$name'.table'
+   -O $path2baserecaltables$name'.table'
 
 
 ## Next run gatkpp-5-applybqsr-v0.1.0.sh
