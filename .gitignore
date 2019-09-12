@@ -127,6 +127,7 @@ erroroutput/
 # e.g. ignore 'dupmetrics/', 'baserecaltable/'
 *metrics/
 *table/
+*tables/
 
 # dummy file 
 # so git acknowledges the presence of directories that only have ignored files
