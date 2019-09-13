@@ -31,7 +31,7 @@
 module load java/1.8.0.111          # language of gatk & picard-tools
 module load gatk/4.1.3.0            # includes picard tools
 # module load samtools/1.9            # view (filter/convert) sort index
-# module load r/
+module load R/3.6.0                 # allows analcov to generate pdf 
 
 # create path variables to access data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
