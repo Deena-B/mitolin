@@ -103,7 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# Big Data files
+# Big Data files or files where there are tons of them
 *.fa*
 *.fastq*
 !*.fastq.eg*
@@ -122,14 +122,16 @@ venv.bak/
 erroroutput/
 *.error
 *.interval_list*
+*.table
+!*.table.eg
+*.pdf
+!*.pdf.eg
+*.csv
+!*.csv.eg
 
 # ignore any directory that ends with...
 # e.g. ignore 'dupmetrics/'
 *metrics/
-
-# ignore any filetypes where there are tons of them
-# eg .table
-*.table
 
 # dummy file 
 # so git acknowledges the presence of directories that only have ignored files
