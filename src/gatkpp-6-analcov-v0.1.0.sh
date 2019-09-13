@@ -75,6 +75,6 @@ gatk AnalyzeCovariates \
     -csv $path2analcovs$name'.csv'
 
 
-## Next run gatksomsnv-1-Mutect2-v0.1.0.sh
+## Next run gatksomsnv-1-mutect2-v0.1.0.sh
 
 
