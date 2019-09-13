@@ -124,10 +124,12 @@ erroroutput/
 *.interval_list*
 
 # ignore any directory that ends with...
-# e.g. ignore 'dupmetrics/', 'baserecaltable/'
+# e.g. ignore 'dupmetrics/'
 *metrics/
-*table/
-*tables/
+
+# ignore any filetypes where there are tons of them
+# eg .table
+*.table
 
 # dummy file 
 # so git acknowledges the presence of directories that only have ignored files
