@@ -31,6 +31,7 @@
 module load java/1.8.0.111          # language of gatk & picard-tools
 module load gatk/4.1.3.0            # includes picard tools
 # module load samtools/1.9            # view (filter/convert) sort index
+# module load r/
 
 # create path variables to access data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
@@ -41,7 +42,7 @@ path2list=${path2tables}
 
 # create path variables (for data deposit)
 path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190911-bqsr-DRB/genomic/'
-path2analcovs=${path2genomic}'analcov/'
+path2analcovs=${path2genomic}'analcovs/'
 
 ## make directories for each path to a directory that doesn't yet exist (in list above above)
 mkdir $path2analcovs
@@ -70,8 +71,8 @@ name=${namewext%'.table'}
 
 gatk AnalyzeCovariates \
     -bqsr $path2tables$namewext \
-    -plots $path2analcovs'AnalyzeCovariates.pdf' \
-    -csv $path2analcovs'AnalyzeCovariates.csv'
+    -plots $path2analcovs$name'.pdf' \
+    -csv $path2analcovs$name'.csv'
 
 
 ## Next run gatksomsnv-1-Mutect2-v0.1.0.sh
