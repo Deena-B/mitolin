@@ -104,21 +104,24 @@ venv.bak/
 .mypy_cache/
 
 # Big Data files or files where there are tons of them
+*.fa
 *.fa*
 *.fastq*
-!*.fastq.eg*
+!*.fastq.eg
 *.fasta*
 !*eg.fasta
-!*.fasta.eg*
+!*.fasta.eg
 *.bam*
-!*.bam.eg*
+!*.bam.eg
 *.sam*
-!*.sam.eg*
+!*.sam.eg
 *.vcf*
-!*.vcf.eg*
+!*.vcf.eg
 *.dict*
+!*.dict.eg
 *.bai
 *.bai*
+!*.bai.eg
 erroroutput/
 *.error
 *.interval_list*
@@ -128,6 +131,8 @@ erroroutput/
 !*.pdf.eg
 *.csv
 !*.csv.eg
+*.png
+!*.png.eg
 
 # ignore any directory that ends with...
 # e.g. ignore 'dupmetrics/'
