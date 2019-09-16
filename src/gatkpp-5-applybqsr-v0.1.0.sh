@@ -88,6 +88,11 @@ gatk ApplyBQSR \
 #     -o $path2qchrfil$name'.bam' \
 #     $path2bqsrbams$name'.bam' MT 
 
+
+## generate bam index file, so I can visualize filtered vs non-filtered in IGV
+
+
+
 ## Next run gatkpp-6-AnalyzeCovariates-v0.1.0.sh
 
 
