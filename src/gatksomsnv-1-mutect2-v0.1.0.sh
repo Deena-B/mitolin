@@ -39,11 +39,14 @@ path2bqsrbams=${path2datadir}'gen/nguyen_nc_2018/20190911-bqsr-DRB/genomic/bqsrb
 path2list=${path2bqsrbams}
 
 # create path variables (for data deposit)
-path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190911-bqsr-DRB/genomic/'
+path2deposit=${path2datadir}'gen/nguyen_nc_2018/20190917-mutect2-DRB/'
+path2genomic=${path2deposit}'genomic/'
 path2mutect2=${path2genomic}'mutect2/'
 
 ## make directories for each path to a directory that doesn't yet exist (in list above above)
-mkdir $path2vcfs
+mkdir $path2deposit
+mkdir $path2genomic
+mkdir $path2mutect2
 
 ## create variable for list of table files
 bqsrbamslist=${path2list}'bqsrbamlist.txt'
