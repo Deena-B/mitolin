@@ -1,9 +1,9 @@
 #!/bin/bash
-#$ -N mutect2
+#$ -N pileup
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 1-89
+#$ -t 2-3
 
 
 #############
@@ -18,7 +18,7 @@
 ## so e & o files get deposited there
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
-    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatksomsnv-1-mutect2-v0.1.0.sh`
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatksomsnv-1-mutect2-v0.2.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
 
@@ -42,11 +42,13 @@ path2list=${path2bqsrbams}
 path2deposit=${path2datadir}'gen/nguyen_nc_2018/20190917-mutect2-DRB/'
 path2genomic=${path2deposit}'genomic/'
 path2mutect2=${path2genomic}'mutect2/'
+path2pileup=${path2genomic}'pileup/'
 
 ## make directories for each path to a directory that doesn't yet exist (in list above above)
 mkdir $path2deposit
 mkdir $path2genomic
 mkdir $path2mutect2
+mkdir $path2pileup
 
 ## create variable for list of table files
 bqsrbamslist=${path2list}'bqsrbamlist.txt'
@@ -77,9 +79,20 @@ name=${namewext%'.bam'}
         ## --pruning-lod-threshold to -4
     ## Mito mode only accepts a single sample
 
-gatk Mutect2 \
-    -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta' \
-    -L MT \
-    --mitochondria-mode true \
-    -I $path2bqsrbams$name.bam \
-    -O $path2mutect2$name.vcf.gz
+# gatk Mutect2 \
+#     -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta' \
+#     -L MT \
+#     --mitochondria-mode true \
+#     -I $path2bqsrbams$name.bam \
+#     -O $path2mutect2$name.vcf.gz
+
+
+## get pileup summaries
+    ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_contamination_GetPileupSummaries.php
+    ## 
+
+gatk GetPileupSummaries \
+    -I $path2bqsrbams$name'.bam' \
+    -V $path2mutect2$name'.vcf.gz' \
+    -L $path2mutect2$name'.vcf.gz' \
+    -O $path2pileup$name'.table'
