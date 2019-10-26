@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N fastq2markdups
+#$ -N fastq2uamg
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
@@ -10,23 +10,15 @@
 #############
 
 ## before running this script
-## make and move to this directory 
-## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/erroroutput/
+## on hpc, make and move to this directory 
+## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/20191025-fastq2ummg/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
-    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2vcf-gatk-v0.1.0.sh`
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2uamg-v1.1.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
-
-## Picard-tools, which are wrapped in gatk, are Java Archive (JAR) file tools 
-## the following syntax should be followed
-## java -Xmx2g -jar JARfilename toolname
-    ## the -Xmx2g flag assigns Java Virtual Machine (JVM) 2GB of memory, this should work for most tools
-    ## the -jar flag indicates that a JAR file will follow
-    ## JARfilename for picard-tools is picard.jar
-    ## toolnames vary by task, flags for specific tools are covered below
 
 
 ################################################
@@ -35,37 +27,37 @@
 
 ## on hpc add packages to PATH
 module load java/1.8.0.111          # language of gatk & picard-tools
-# module load picard-tools/1.96     # for generating uBAM & merging uBAM w aBAM
 module load gatk/4.1.2.0            # includes picard tools
-module load bwa/0.7.17-5            # aligner
-module load samtools/1.9            # view (filter/convert) sort index
+module load bwa/0.7.17-5            # mapper (aligner)
 
-# create path variables to access and deposit data 
+## create path variables to access and deposit data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
+path2ref=${path2datadir}'ref/'
 path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
-path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190809-fastq2vcf/ind1/genomic/'
-path2ubams=${path2genomic}'1-ubams/'
-path2aligned=${path2genomic}'2-aligned/'
-path2uamg=${path2genomic}'3-uamg/'
-path2filuamg=${path2genomic}'4-filuamg/'
+path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_2018/'
+path2deposit=${path2gen_nguyen18}'20191025-fastq2umm/deposit/' # change this to match above!
+path2ubams=${path2deposit}'1-ubams/'
+path2mapped=${path2deposit}'2-mapped/'
+path2ummg=${path2deposit}'3-ummg/'
 
 ## make directories for each path above
-mkdir $path2genomic
+mkdir $path2deposit
 mkdir $path2ubams
-mkdir $path2aligned
-mkdir $path2uamg
-mkdir $path2filuamg
+mkdir $path2mapped
+mkdir $path2ummg
 
 ## make .keep files so folders are tracked by git
-touch $path2genomic/.keep
+touch $path2deposit/.keep
 touch $path2ubams/.keep
-touch $path2aligned/.keep
-touch $path2uamg/.keep
-touch $path2filuamg/.keep 
+touch $path2mapped/.keep
+touch $path2ummg/.keep
+
+## create path variable to access lists of fastqs
+path2lists=${path2gen_nguyen18}'20190809-r1r2lists-i1-rename/'
 
 ## create varibles for lists of fastq files
-r1list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r1list.txt'
-r2list=${path2datadir}'gen/nguyen_nc_2018/20190809-r1r2lists-i1-rename/r2list.txt'
+r1list=${path2gen_nguyen18}'r1list.txt'
+r2list=${path2gen_nguyen18}'r2list.txt'
 
 ## create a name variable
 ## note this name has '-R#.fastq.gz' extension included
@@ -86,10 +78,6 @@ barcodes=${name:19}
 bar1=${name:19:8}
 bar2=${name:28}
 cell=${ind}'-'${lib}'-'${well}
-
-## create filename extenstion variables
-samext='.sam'
-bamext='.bam'
 
 ## define readgroupinfo variables
     ## https://gatkforums.broadinstitute.org/gatk/discussion/6472/read-groups
@@ -116,7 +104,7 @@ readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:
 ######################
 
 
-## Make uBAM with picard-tools FastqToSam
+## Make uBAM with FastqToSam (ported from picard-tools to gatk)
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/4.1.3.0/picard_sam_FastqToSam.php
     ## https://broadinstitute.github.io/picard/command-line-overview.html#FastqToSam
     ## put all outputs into one folder, so they are easy to access later
@@ -124,7 +112,7 @@ readgroupinfo='@RG\tID:'${lib}.${lane}'\tPU:'${lib}.${lane}.${bar1}${bar2}'\tSM:
 gatk FastqToSam \
     -F1 $path2fastq$name1wext \
     -F2 $path2fastq$name2wext \
-    -O $path2ubams$cell'-'$lane$bamext \
+    -O $path2ubams$cell'-'$lane'.bam' \
     -RG ${lib}'.'${lane} \
     -PU ${lib}.${lane}.${bar1}${bar2} \
     -SM $cell \
@@ -145,7 +133,7 @@ bwa mem -M -t 32 \
     -R $readgroupinfo \
     $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2aligned$cell'-'$lane$samext 
+    > $path2aligned$cell'-'$lane'.sam' 
 
 
 ## merge bwa aligned, (optionally samtools filtered), sam or bam files with uBAM files
@@ -155,9 +143,9 @@ bwa mem -M -t 32 \
         ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
 gatk MergeBamAlignment \
-    -UNMAPPED $path2ubams$cell'-'$lane$bamext \
-    -ALIGNED $path2aligned$cell'-'$lane$samext \
-    -O $path2uamg$cell'-'$lane$bamext \
+    -UNMAPPED $path2ubams$cell'-'$lane'.bam' \
+    -ALIGNED $path2aligned$cell'-'$lane'.sam' \
+    -O $path2uamg$cell'-'$lane'.bam' \
     -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
     -SO coordinate \
     --CREATE_INDEX true \
@@ -168,8 +156,8 @@ gatk MergeBamAlignment \
     # input BAM file must have an index & be sorted in coordinate order 
 
 samtools view -b -q 20 \
-    -o $path2filuamg$cell'-'$lane$bamext \
-    $path2uamg$cell'-'$lane$bamext MT 
+    -o $path2filuamg$cell'-'$lane'.bam' \
+    $path2uamg$cell'-'$lane'.bam' MT 
 
 
 ## see ipynb *pairl1l2* for generation of lists of paired samples
