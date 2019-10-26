@@ -138,6 +138,10 @@ erroroutput/
 # e.g. ignore 'dupmetrics/'
 *metrics/
 
+# reference files
+data/ref/broad/bundles/b38/*
+data/ref/broad/bundles/mito/*
+
 # dummy file 
 # so git acknowledges the presence of directories that only have ignored files
 # .keep
