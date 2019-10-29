@@ -1,9 +1,9 @@
 #!/bin/bash
-#$ -N markdups
+#$ -N markdup
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 1-60
+#$ -t 2-4
 
 
 #############
@@ -13,12 +13,12 @@
 ## before running this script
 ## make and move to this directory 
 ## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/ \
-    ## 20190909-markdups-DRB/ind1/erroroutput/
+    ## 20191029-markdup/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
-    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-3-markdup2bqsr-v0.1.0.sh`
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-3-markdup-v1.1.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
 
@@ -30,26 +30,26 @@
 ## add packages to PATH
 module load java/1.8.0.111          # language of gatk & picard-tools
 module load gatk/4.1.3.0            # includes picard tools
-module load samtools/1.9            # view (filter/convert) sort index
 
 # create path variables to access data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
-# the path below is to samples that were only run in a single lane
-    # those listed in 'unpairedlist.txt'
-path2filuamgbam=${path2datadir}'gen/nguyen_nc_2018/20190809-gatkpp1-fastq2uamgfil-DRB/ind1/genomic/4-filuamg/'
+path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_2018/'
+# the path below is to bam and bai files of samples that were only run in a single lane
+    # samples listed in 'unpairedlist.txt'
+path2ummgbam=${path2gen_nguyen18}'20191025-fastq2ummg/output/3-ummg/'
 # the path below is to lane-merged bam & bai files
-path2luamgfilbam=${path2datadir}'gen/nguyen_nc_2018/20190821-gatkpp2-lanesmerged-DRB/ind1/genomic/luamgfil/'
+path2lummgbam=${path2gen_nguyen18}'20191029-mgsm/output/lummg/'
 
 # the path below has lists: unpairedlist.txt & lmglist.txt
-path2lists=${path2datadir}'gen/nguyen_nc_2018/20190906-celllist-DRB/'
+path2lists=${path2gen_nguyen18}'20190906-celllist-DRB/'
 
 # create paths to deposit data
-path2genomic=${path2datadir}'gen/nguyen_nc_2018/20190909-markdups-DRB/ind1/genomic/'
-path2dupsmarked=${path2genomic}'dupsmarked/'
-path2dupmetrics=${path2genomic}'dupmetrics/'
+path2output=${path2gen_nguyen18}'20191029-markdup/output/'
+path2dupsmarked=${path2output}'dupsmarked/'
+path2dupmetrics=${path2output}'dupmetrics/'
 
 ## make directories for each 'deposit data' path above
-mkdir $path2genomic
+mkdir $path2output
 mkdir $path2dupsmarked
 mkdir $path2dupmetrics
 
@@ -63,13 +63,8 @@ lmglist=${path2lists}'lmglist.txt'
 namewext=`head -n $SGE_TASK_ID $unpairedlist | tail -n 1 | cut -f1`
 
 ## remove ext from name
-## e.g. name=i1-lib001-A01
+## e.g. i1-lib001-A01
 name=${namewext%'.bam'}
-
-## create filename extenstion variables
-samext='.sam'
-bamext='.bam'
-txtext='.txt'
 
 
 #############################
@@ -86,8 +81,8 @@ txtext='.txt'
 
 # below currently only processes one of the two lists of samples
 gatk MarkDuplicates \
-    -I $path2filuamgbam$name$bamext \
-    -O $path2dupsmarked$name$bamext \
+    -I $path2lummgbam$name'.bam' \
+    -O $path2dupsmarked$name'.bam' \
     -M $path2dupmetrics$name'.txt' \
     --TAG_DUPLICATE_SET_MEMBERS true \
     --CREATE_INDEX 
