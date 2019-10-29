@@ -71,7 +71,7 @@ name1wext=`head -n $SGE_TASK_ID $r1list | tail -n 1 | cut -f1`
 name2wext=`head -n $SGE_TASK_ID $r2list | tail -n 1 | cut -f1`
 
 ## remove R# & ext from name
-## e.g. name=i1-lib001-L001-A01-TAAGGCGA-GCGTAAGA
+## e.g. i1-lib001-L001-A01-TAAGGCGA-GCGTAAGA
 name=${name1wext%'-R'[1-2].fastq.gz}
 
 ## assign variables to every piece of info in name
