@@ -60,7 +60,7 @@ touch $path2ummg/.keep
 path2lists=${path2gen_nguyen18}'20190809-r1r2lists-i1-rename/'
 
 ## create varibles for lists of fastq files
-## see ipynb *pairl1l2* for generation of lists of paired samples
+## see ipynb *pairr1r2* for generation of lists of paired samples
 r1list=${path2lists}'r1list.txt'
 r2list=${path2lists}'r2list.txt'
 
