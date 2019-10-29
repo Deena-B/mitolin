@@ -27,27 +27,27 @@
 
 ## on hpc add packages to PATH
 module load java/1.8.0.111          # language of gatk & picard-tools
-module load gatk/4.1.2.0            # includes picard tools
+module load gatk/4.1.3.0            # includes picard tools
 module load bwa/0.7.17-5            # mapper (aligner)
 
 ## create path variables to access and deposit data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
-path2ref=${path2datadir}'ref/'
+path2ref=${path2datadir}'ref/broad/bundles/b38/v0/'
 path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
 path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_2018/'
-path2deposit=${path2gen_nguyen18}'20191025-fastq2umm/deposit/' # change this to match above!
-path2ubams=${path2deposit}'1-ubams/'
-path2mapped=${path2deposit}'2-mapped/'
-path2ummg=${path2deposit}'3-ummg/'
+path2output=${path2gen_nguyen18}'20191025-fastq2umm/output/' # change this to match above!
+path2ubams=${path2output}'1-ubams/'
+path2mapped=${path2output}'2-mapped/'
+path2ummg=${path2output}'3-ummg/'
 
 ## make directories for each path above
-mkdir $path2deposit
+mkdir $path2output
 mkdir $path2ubams
 mkdir $path2mapped
 mkdir $path2ummg
 
 ## make .keep files so folders are tracked by git
-touch $path2deposit/.keep
+touch $path2output/.keep
 touch $path2ubams/.keep
 touch $path2mapped/.keep
 touch $path2ummg/.keep
@@ -56,6 +56,7 @@ touch $path2ummg/.keep
 path2lists=${path2gen_nguyen18}'20190809-r1r2lists-i1-rename/'
 
 ## create varibles for lists of fastq files
+## see ipynb *pairl1l2* for generation of lists of paired samples
 r1list=${path2gen_nguyen18}'r1list.txt'
 r2list=${path2gen_nguyen18}'r2list.txt'
 
@@ -131,34 +132,25 @@ gatk FastqToSam \
 
 bwa mem -M -t 32 \
     -R $readgroupinfo \
-    $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
+    $path2ref'Homo_sapiens_assembly38.fasta' \
     $path2fastq$name1wext $path2fastq$name2wext \
-    > $path2aligned$cell'-'$lane'.sam' 
+    > $path2mapped$cell'-'$lane'.sam' 
 
 
 ## merge bwa aligned, (optionally samtools filtered), sam or bam files with uBAM files
-    ## MergeBamAlignment - merges aligned with unaligned to create unaligned bam
+    ## MergeBamAlignment - merges mapped (aligned) with unmapped (unaligned) to create unmapped bam (uBAM)
     ## produces a third SAM or BAM file of aligned and unaligned reads
         ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/picard_sam_MergeBamAlignment.php
         ## https://broadinstitute.github.io/picard/command-line-overview.html#MergeBamAlignment
 
 gatk MergeBamAlignment \
     -UNMAPPED $path2ubams$cell'-'$lane'.bam' \
-    -ALIGNED $path2aligned$cell'-'$lane'.sam' \
-    -O $path2uamg$cell'-'$lane'.bam' \
-    -R $path2datadir'ref/broad/bundles/b37/human_g1k_v37.fasta.gz' \
+    -ALIGNED $path2mapped$cell'-'$lane'.sam' \
+    -O $path2ummg$cell'-'$lane'.bam' \
+    -R $path2ref'Homo_sapiens_assembly38.fasta' \
     -SO coordinate \
     --CREATE_INDEX true \
     --ALIGNED_READS_ONLY true 
 
 
-## filter by quality & location
-    # input BAM file must have an index & be sorted in coordinate order 
-
-samtools view -b -q 20 \
-    -o $path2filuamg$cell'-'$lane'.bam' \
-    $path2uamg$cell'-'$lane'.bam' MT 
-
-
-## see ipynb *pairl1l2* for generation of lists of paired samples
 ## see script gatkpp-2* for next steps
