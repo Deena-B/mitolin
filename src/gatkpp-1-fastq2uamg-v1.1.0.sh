@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 2-4
+#$ -t 1-296
 
 #############
 ## Docstring
@@ -14,6 +14,10 @@
 ## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/20191025-fastq2ummg/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
+
+## change -t ^ to the samples that you want to run the script on
+## for testing, use `-t 2-4`
+## for all, count the number of lines: `wc -l r1list.txt`
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
     ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-1-fastq2uamg-v1.1.0.sh`
