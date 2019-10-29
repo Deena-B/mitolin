@@ -35,15 +35,15 @@ path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_1018/'
 path2bam=${path2gen_nguyen18}'20191025-fastq2ummg/output/3-ummg/'
 path2output=${path2gen_nguyen18}'20191029-mgsm/output'
-path2luamg=${path2output}'luamg/'
+path2lummg=${path2output}'lummg/'
 
 ## make directories for each path above
 mkdir $path2output
-mkdir $path2luamg
+mkdir $path2lummg
 
 ## make .keep files so folders are tracked by git
 touch $path2output/.keep
-touch $path2luamg/.keep 
+touch $path2lummg/.keep 
 
 ## create path variables to access lists of bam files
 path2lists=${path2gen_nguyen18}'20190906-pairlanelists-DRB/'
@@ -81,7 +81,7 @@ name=${name1wext%'-L00'[1-2].bam}
 gatk MergeSamFiles \
     -I ${path2bam}${name1wext} \
     -I ${path2bam}${name2wext} \
-    -O ${path2luamg}${name}'.bam' \
+    -O ${path2lummg}${name}'.bam' \
     --CREATE_INDEX true
 
 ## next gatkpp3-markdup
