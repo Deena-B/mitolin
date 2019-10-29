@@ -16,7 +16,7 @@
 ## so e & o files get deposited there
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
-    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/fastq2uamg-v1.1.0.sh`
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-1-fastq2uamg-v1.1.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
 
@@ -35,7 +35,7 @@ path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 path2ref=${path2datadir}'ref/broad/bundles/b38/v0/'
 path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
 path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_2018/'
-path2output=${path2gen_nguyen18}'20191025-fastq2umm/output/' # change this to match above!
+path2output=${path2gen_nguyen18}'20191025-fastq2ummg/output/' # change this to reflect path with erroroutput!
 path2ubams=${path2output}'1-ubams/'
 path2mapped=${path2output}'2-mapped/'
 path2ummg=${path2output}'3-ummg/'
