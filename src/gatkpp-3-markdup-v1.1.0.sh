@@ -58,6 +58,11 @@ mkdir $path2output
 mkdir $path2dupsmarked
 mkdir $path2dupmetrics
 
+## make .keep files so folders are tracked by git
+touch $path2output/.keep
+touch $path2dupsmarked/.keep
+touch $path2dupmetrics/.keep
+
 ## create variables for lists of bam files
 unpairedlist=${path2lists}'unpairedlist.txt'
 lmglist=${path2lists}'lmglist.txt'
