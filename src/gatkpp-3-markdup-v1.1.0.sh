@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 118
+#$ -t 1-118
 
 
 #############
