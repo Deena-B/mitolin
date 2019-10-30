@@ -13,7 +13,7 @@
 ## before running this script
 ## make and move to this directory 
 ## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/ \
-    ## 20191029-markdup/erroroutput/
+    ## 20191030-markdup/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
