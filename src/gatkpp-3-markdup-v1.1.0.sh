@@ -17,6 +17,11 @@
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
+## change -t ^ to the samples that you want to run the script on
+    ## for testing, use `-t 2-4`
+    ## for all, count the number of lines: 
+    ## `wc -l unpairedlist.txt` or 'lmglist.txt'
+
 ## to run a script on hpc use `qsub path/to/filename.sh`
     ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-3-markdup-v1.1.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
