@@ -34,7 +34,7 @@ module load gatk/4.1.3.0            # includes picard tools
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_2018/'
 path2bam=${path2gen_nguyen18}'20191025-fastq2ummg/output/3-ummg/'
-path2output=${path2gen_nguyen18}'20191029-mgsm/output'
+path2output=${path2gen_nguyen18}'20191029-mgsm/output/'
 path2lummg=${path2output}'lummg/'
 
 ## make directories for each path above
