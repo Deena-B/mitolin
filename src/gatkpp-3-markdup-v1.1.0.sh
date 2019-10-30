@@ -44,7 +44,7 @@ path2lummgbam=${path2gen_nguyen18}'20191029-mgsm/output/lummg/'
 path2lists=${path2gen_nguyen18}'20190906-celllist-DRB/'
 
 # create paths to deposit data
-path2output=${path2gen_nguyen18}'20191029-markdup/output/'
+path2output=${path2gen_nguyen18}'20191030-markdup/output/'
 path2dupsmarked=${path2output}'dupsmarked/'
 path2dupmetrics=${path2output}'dupmetrics/'
 
