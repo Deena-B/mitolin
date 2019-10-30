@@ -11,7 +11,8 @@
 
 ## before running this script
 ## on hpc, make and move to this directory 
-## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/20191025-fastq2ummg/erroroutput/
+## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/ \
+    ## 20191025-fastq2ummg/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
