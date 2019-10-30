@@ -12,7 +12,8 @@
 
 ## before running this script
 ## make and move to this directory 
-## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/20191029-mgsm/erroroutput/
+## /dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/gen/nguyen_nc_2018/ \
+    ## 20191029-mgsm/erroroutput/
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
