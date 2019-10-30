@@ -58,9 +58,10 @@ unpairedlist=${path2lists}'unpairedlist.txt'
 lmglist=${path2lists}'lmglist.txt'
 
 ## create a name variable
+## the list variable has to match the -I path variable used in gatk MarkDuplicates 
 ## note this name has '.bam' extension included
 ## e.g. i1-lib001-A01.bam
-namewext=`head -n $SGE_TASK_ID $unpairedlist | tail -n 1 | cut -f1`
+namewext=`head -n $SGE_TASK_ID ${lmglist} | tail -n 1 | cut -f1`
 
 ## remove ext from name
 ## e.g. i1-lib001-A01
