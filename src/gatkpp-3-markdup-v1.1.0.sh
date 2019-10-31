@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 1-118
+#$ -t 1-60
 
 
 #############
@@ -71,7 +71,7 @@ lmglist=${path2lists}'lmglist.txt'
 ## the list variable has to match the -I path variable used in gatk MarkDuplicates 
 ## note this name has '.bam' extension included
 ## e.g. i1-lib001-A01.bam
-namewext=`head -n $SGE_TASK_ID ${lmglist} | tail -n 1 | cut -f1`
+namewext=`head -n $SGE_TASK_ID ${unpairedlist} | tail -n 1 | cut -f1`
 
 ## remove ext from name
 ## e.g. i1-lib001-A01
@@ -92,7 +92,7 @@ name=${namewext%'.bam'}
 
 # below currently only processes one of the two lists of samples
 gatk MarkDuplicates \
-    -I $path2lummgbam$name'.bam' \
+    -I $path2ummgbam$name'.bam' \
     -O $path2dupsmarked$name'.bam' \
     -M $path2dupmetrics$name'.txt' \
     --TAG_DUPLICATE_SET_MEMBERS true \
