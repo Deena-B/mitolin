@@ -17,6 +17,8 @@
 ## run this script from this ^ directory
 ## so e & o files get deposited there
 
+
+
 ## to run a script on hpc use `qsub path/to/filename.sh`
     ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatksomsnv-1-mutect2-v0.2.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
@@ -89,7 +91,7 @@ name=${namewext%'.bam'}
 
 ## get pileup summaries
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_contamination_GetPileupSummaries.php
-    ## 
+    ## Tabulates pileup metrics for inferring contamination
 
 gatk GetPileupSummaries \
     -I $path2bqsrbams$name'.bam' \
