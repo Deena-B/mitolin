@@ -23,7 +23,7 @@
     ## `wc -l dupsmarkedlist.txt'
 
 ## to run a script on hpc use `qsub path/to/filename.sh`
-    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-4-bqsr-v1.1.0.sh`
+    ## `qsub /dfs3/som/dalawson/drb/deepcelllineage/mitolin/src/gatkpp-4-baserecal-v1.1.0.sh`
 ## to check on the script's status: `qstat -u dalawson`
 ## to stop a submitted project by job-ID number: `qdel job-ID-number`
 
