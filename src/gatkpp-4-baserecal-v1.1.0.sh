@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N bqsr
+#$ -N baserecal
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
