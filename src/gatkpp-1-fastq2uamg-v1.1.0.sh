@@ -35,11 +35,13 @@ module load java/1.8.0.111          # language of gatk & picard-tools
 module load gatk/4.1.3.0            # includes picard tools
 module load bwa/0.7.17-5            # mapper (aligner)
 
-## create path variables to access and deposit data 
+## create path variables to access data 
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
 path2ref=${path2datadir}'ref/broad/bundles/b38/v0/'
 path2fastq=${path2datadir}'raw/nguyen_nc_2018/ind1/'
 path2gen_nguyen18=${path2datadir}'gen/nguyen_nc_2018/'
+
+# create paths to deposit data
 path2output=${path2gen_nguyen18}'20191025-fastq2ummg/output/' # change this to reflect path with erroroutput!
 path2ubams=${path2output}'1-ubams/'
 path2mapped=${path2output}'2-mapped/'
