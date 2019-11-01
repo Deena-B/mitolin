@@ -52,7 +52,7 @@ path2bqsroutput=${path2gen_nguyen2018}'20191031-bqsr/output/'
 path2tables=${path2bqsroutput}'baserecaltables/'
 
 ## create new paths to deposit data
-path2analcovs=${path2output}'analcovs/'
+path2analcovs=${path2bqsroutput}'analcovs/'
 
 ## make directories for each new 'deposit data' path above
 mkdir $path2analcovs
