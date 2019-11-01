@@ -48,8 +48,8 @@ path2list=${path2dupsmarked}
 
 ## these directories were made by gatkpp-4-baserecal
 ## these paths are needed to access & deposit data
-path2output=${path2gen_nguyen2018}'20191031-bqsr/output/'
-path2tables=${path2bqsrout}'baserecaltables/'
+path2bqsroutput=${path2gen_nguyen2018}'20191031-bqsr/output/'
+path2tables=${path2bqsroutput}'baserecaltables/'
 
 ## create new paths to deposit data
 path2analcovs=${path2output}'analcovs/'
