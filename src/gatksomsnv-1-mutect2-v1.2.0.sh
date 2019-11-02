@@ -1,5 +1,5 @@
 #!/bin/bash
-#$ -N pileup
+#$ -N mutect2
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
@@ -39,6 +39,7 @@ module load gatk/4.1.3.0            # includes picard tools
 
 # create parent path variables
 path2datadir='/dfs3/som/dalawson/drb/deepcelllineage/mitolin/data/'
+path2ref=${path2datadir}'ref/broad/bundles/b38/v0/'
 path2gen_nguyen2018=${path2datadir}'gen/nguyen_nc_2018/'
 
 ## create path variable to access list: dupsmarkedlist.txt
@@ -56,12 +57,11 @@ path2bqsrbams=${path2bqsroutput}'bqsrbams/'
 
 ## create new paths to deposit data
 path2somsnv=${path2gen_nguyen2018}'20191101-somsnv/'
-path2mutectoutput=${path2deposit}'output/'
-path2mutect2=${path2genomic}'mutect2/'
+path2mutectoutput=${path2somsnv}'output/'
+path2mutect2=${path2mutectoutput}'mutect2/'
 # path2pileup=${path2genomic}'pileup/'
 
 ## make directories for each new 'deposit data' path above
-mkdir $path2somsnv
 mkdir $path2mutectoutput
 mkdir $path2mutect2
 # mkdir $path2pileup
