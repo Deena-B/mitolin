@@ -100,7 +100,7 @@ name=${namewext%'.bam'}
 
 gatk Mutect2 \
     -R $path2ref'Homo_sapiens_assembly38.fasta' \
-    -L MT \
+    -L chrM \
     --mitochondria-mode true \
     -I $path2bqsrbams$name'.bam' \
     -O $path2mutect2$name'.vcf.gz'
