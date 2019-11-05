@@ -3,7 +3,7 @@
 #$ -ckpt restart
 #$ -q som,pub64,free64,asom
 #$ -pe make 64
-#$ -t 1-178
+#$ -t 2-3
 
 
 #############
@@ -57,18 +57,18 @@ path2bqsrbams=${path2bqsroutput}'bqsrbams/'
 
 ## create new paths to deposit data
 path2somsnv=${path2gen_nguyen2018}'20191101-somsnv/'
-path2mutectoutput=${path2somsnv}'output/'
-path2mutect2=${path2mutectoutput}'mutect2/'
-# path2pileup=${path2genomic}'pileup/'
+path2somsnvoutput=${path2somsnv}'output/'
+path2mutect2=${path2somsnvoutput}'mutect2/'
+# path2pileup=${path2somsnvoutput}'pileup/'
 
 ## make directories for each new 'deposit data' path above
-mkdir $path2mutectoutput
+mkdir $path2somsnvoutput
 mkdir $path2mutect2
 # mkdir $path2pileup
 
 ## make .keep files so new directories are tracked by git
 touch $path2somsnv/.keep
-touch $path2mutectoutput/.keep
+touch $path2somsnvoutput/.keep
 touch $path2mutect2/.keep
 # touch $path2pileup/.keep
 
@@ -109,9 +109,10 @@ gatk Mutect2 \
 ## get pileup summaries
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_contamination_GetPileupSummaries.php
     ## Tabulates pileup metrics for inferring contamination
+    ## for -V/-L files see note 20191103-gatksomsnv1-getpileup.md
 
 # gatk GetPileupSummaries \
 #     -I $path2bqsrbams$name'.bam' \
-#     -V $path2mutect2$name'.vcf.gz' \
-#     -L $path2mutect2$name'.vcf.gz' \
+#     -V $path2ref?'.vcf.gz' \
+#     -L $path2refgnomAD'.vcf.gz' \
 #     -O $path2pileup$name'.table'
