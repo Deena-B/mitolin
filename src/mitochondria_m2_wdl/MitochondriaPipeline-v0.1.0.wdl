@@ -195,7 +195,8 @@ task SubsetBamToChrM {
       localization_optional: true
     }
   }
-  command <<<
+
+  command {
     set -e
     export GATK_LOCAL_JAR=~{default="/root/gatk.jar" gatk_override}
 
@@ -206,13 +207,15 @@ task SubsetBamToChrM {
       --read-filter MateUnmappedAndUnmappedReadFilter \
       -I ~{input_bam} \
       -O ~{basename}.bam
-  >>>
+  }
+
   runtime {
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     docker: "us.gcr.io/broad-gatk/gatk:4.1.1.0"
     preemptible: select_first([preemptible_tries, 5])
   }
+
   output {
     File output_bam = "~{basename}.bam"
     File output_bai = "~{basename}.bai"
@@ -232,33 +235,38 @@ task RevertSam {
   meta {
     description: "Removes alignment information while retaining recalibrated base qualities and original alignment tags"
   }
+
   parameter_meta {
     input_bam: "aligned bam"
   }
+
   command {
     java -Xmx1000m -jar /usr/gitc/picard.jar \
-    RevertSam \
-    INPUT=~{input_bam} \
-    OUTPUT_BY_READGROUP=false \
-    OUTPUT=~{basename}.bam \
-    VALIDATION_STRINGENCY=LENIENT \
-    ATTRIBUTE_TO_CLEAR=FT \
-    ATTRIBUTE_TO_CLEAR=CO \
-    SORT_ORDER=queryname \
-    RESTORE_ORIGINAL_QUALITIES=false
+      RevertSam \
+        INPUT=~{input_bam} \
+        OUTPUT_BY_READGROUP=false \
+        OUTPUT=~{basename}.bam \
+        VALIDATION_STRINGENCY=LENIENT \
+        ATTRIBUTE_TO_CLEAR=FT \
+        ATTRIBUTE_TO_CLEAR=CO \
+        SORT_ORDER=queryname \
+        RESTORE_ORIGINAL_QUALITIES=false
   }
+
   runtime {
     disks: "local-disk " + disk_size + " HDD"
     memory: "2 GB"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.2-1552931386"
     preemptible: select_first([preemptible_tries, 5])
   }
+
   output {
     File unmapped_bam = "~{basename}.bam"
   }
 }
 
 task CoverageAtEveryBase {
+  
   input {
     File input_bam_regular_ref
     File input_bam_regular_ref_index
@@ -276,12 +284,14 @@ task CoverageAtEveryBase {
 
     Int? preemptible_tries
   }
+  
   Int disk_size = ceil(size(input_bam_regular_ref, "GB") + size(input_bam_shifted_ref, "GB") + size(ref_fasta, "GB") * 2) + 20
 
   meta {
     description: "Remove this hack once there's a GVCF solution."
   }
-  command <<<
+  
+  command {
     set -e
 
     java -jar /usr/gitc/picard.jar CollectHsMetrics \
@@ -325,13 +335,15 @@ task CoverageAtEveryBase {
       write.table(combined_table, "per_base_coverage.tsv", row.names=F, col.names=T, quote=F, sep="\t")
 
     CODE
-  >>>
+  }
+  
   runtime {
     disks: "local-disk " + disk_size + " HDD"
     memory: "1200 MB"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.2-1552931386"
     preemptible: select_first([preemptible_tries, 5])
   }
+  
   output {
     File table = "per_base_coverage.tsv"
   }
