@@ -1,9 +1,14 @@
-version 1.0
+version 0.1.0
 
 workflow AlignmentPipeline {
 
   meta {
-    description: "Uses BWA to align unmapped bam and marks duplicates."
+    description: "Uses BWA to map unmapped bam to chrM and marks duplicates."
+  }
+
+  parameter_meta {
+    input_bam: "Input is an unaligned subset bam of NuMT and chrM reads and their mates. All reads must be paired."
+    mt_aligned_bam: "Output is aligned duplicate marked coordinate sorted bam."
   }
 
   input {
@@ -21,11 +26,6 @@ workflow AlignmentPipeline {
 
     #Optional runtime arguments
     Int? preemptible_tries
-  }
-
-  parameter_meta {
-    input_bam: "Input is an unaligned subset bam of NuMT and chrM reads and their mates. All reads must be paired."
-    mt_aligned_bam: "Output is aligned duplicate marked coordinate sorted bam."
   }
 
   call GetBwaVersion
@@ -53,7 +53,18 @@ workflow AlignmentPipeline {
   }
 }
 
+
 task AlignAndMarkDuplicates {
+  
+  meta {
+    description: "Maps with BWA and MergeBamAlignment, then Marks Duplicates. Outputs a coordinate sorted bam."
+  }
+  
+  parameter_meta {
+    input_bam: "Unmapped bam"
+    bwa_version: "BWA version to be added to header of aligned bam"
+  }
+
   input {
     File input_bam
     String bwa_commandline = "bwa mem -K 100000000 -p -v 3 -t 2 -Y $bash_ref_fasta"
@@ -78,13 +89,6 @@ task AlignAndMarkDuplicates {
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_amb, "GB") + size(ref_ann, "GB") + size(ref_bwt, "GB") + size(ref_pac, "GB") + size(ref_sa, "GB")
   Int disk_size = ceil(size(input_bam, "GB") * 4 + ref_size) + 20
 
-  meta {
-    description: "Aligns with BWA and MergeBamAlignment, then Marks Duplicates. Outputs a coordinate sorted bam."
-  }
-  parameter_meta {
-    input_bam: "Unmapped bam"
-    bwa_version: "BWA version to be added to header of aligned bam"
-  }
   command <<<
     set -o pipefail
     set -e
@@ -147,6 +151,7 @@ task AlignAndMarkDuplicates {
       CREATE_INDEX=true \
       MAX_RECORDS_IN_RAM=300000
   >>>
+  
   runtime {
     preemptible: select_first([preemptible_tries, 5])
     memory: "6 GB"
@@ -154,6 +159,7 @@ task AlignAndMarkDuplicates {
     disks: "local-disk " + disk_size + " HDD"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.2-1552931386"
   }
+  
   output {
     File output_bam = "~{output_bam_basename}.bam"
     File output_bam_index = "~{output_bam_basename}.bai"
@@ -162,10 +168,13 @@ task AlignAndMarkDuplicates {
   }
 }
 
+
 task GetBwaVersion {
+  
   meta {
     description: "Gets version of BWA"
   }
+  
   command {
     # not setting set -o pipefail here because /bwa has a rc=1 and we dont want to allow rc=1 to succeed because
     # the sed may also fail with that error and that is something we actually want to fail on.
@@ -173,10 +182,12 @@ task GetBwaVersion {
     grep -e '^Version' | \
     sed 's/Version: //'
   }
+  
   runtime {
     memory: "1 GB"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.2-1552931386"
   }
+  
   output {
     String version = read_string(stdout())
   }
