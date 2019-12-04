@@ -78,9 +78,8 @@ name=${namewext%'.bam'}
 #############################
 
 
-## apply base quality score recalibration to bams
+## generate plots to assess the quality of recalibration
     ## https://software.broadinstitute.org/gatk/documentation/tooldocs/current/org_broadinstitute_hellbender_tools_walkers_bqsr_AnalyzeCovariates.php
-    ## generates plots to assess the quality of a recalibration
 
 gatk AnalyzeCovariates \
     -bqsr $path2tables$name'.table' \
