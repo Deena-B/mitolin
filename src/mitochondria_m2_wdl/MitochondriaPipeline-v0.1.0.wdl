@@ -165,6 +165,8 @@ workflow MitochondriaPipeline {
   }
 }
 
+# just keep the reads that aligned to ChrM
+# only keep reads whose mates also aligned to ChrM 
 task SubsetBamToChrM {
   input {
     File input_bam
@@ -314,27 +316,33 @@ task CoverageAtEveryBase {
       COVMAX=20000 \
       SAMPLE_SIZE=1
 
-    R --vanilla <<CODE
+    R --vanilla { 
       shift_back = function(x) {
         if (x < 8570) {
-          return(x + 8000)
-        } else {
-          return (x - 8569)
-        }
-      }
+          return(x + 8000)} 
+        else {
+          return (x - 8569)}
+
 
       control_region_shifted = read.table("control_region_shifted.tsv", header=T)
+      
       shifted_back = sapply(control_region_shifted[,"pos"], shift_back)
+      
       control_region_shifted[,"pos"] = shifted_back
 
+      3 tables
       beginning = subset(control_region_shifted, control_region_shifted[,'pos']<8000)
+      
       end = subset(control_region_shifted, control_region_shifted[,'pos']>8000)
 
-      non_control_region = read.table("non_control_region.tsv", header=T)
-      combined_table = rbind(beginning, non_control_region, end)
-      write.table(combined_table, "per_base_coverage.tsv", row.names=F, col.names=T, quote=F, sep="\t")
 
-    CODE
+      non_control_region = read.table("non_control_region.tsv", header=T)
+      
+      # beginning & end come from control_region_shifted.tsv
+      # non_control_region comes from non_control_region.tsv
+      combined_table = rbind(beginning, non_control_region, end)
+      
+      write.table(combined_table, "per_base_coverage.tsv", row.names=F, col.names=T, quote=F, sep="\t")}
   }
   
   runtime {

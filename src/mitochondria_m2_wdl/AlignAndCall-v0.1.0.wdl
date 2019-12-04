@@ -131,7 +131,7 @@ workflow AlignAndCall {
       ref_dict = mt_shifted_dict,
       compress = compress_output_vcf,
       gatk_override = gatk_override,
-      # Everything is called except the control region.
+      # The control region is called
       m2_extra_args = select_first([m2_extra_args, ""]) + " -L chrM:8025-9144 ",
       mem = M2_mem,
       preemptible_tries = preemptible_tries
@@ -244,6 +244,7 @@ with open("haplochecker_out/~{basename}.contamination.txt") as output:
         print(row["MinorLevel"], file=open("minor_level.txt", 'w'))
 CODE
   }
+
   runtime {
     preemptible: select_first([preemptible_tries, 5])
     memory: "3 GB"
@@ -282,32 +283,34 @@ task CollectWgsMetrics {
     read_length: "Read length used for optimization only. If this is too small CollectWgsMetrics might fail. Default is 151."
   }
 
-  command <<<
+  command {
     set -e
 
     java -Xms2000m -jar /usr/gitc/picard.jar \
       CollectWgsMetrics \
-      INPUT=~{input_bam} \
-      VALIDATION_STRINGENCY=SILENT \
-      REFERENCE_SEQUENCE=~{ref_fasta} \
-      OUTPUT=metrics.txt \
-      USE_FAST_ALGORITHM=true \
-      READ_LENGTH=~{read_length_for_optimization} \
-      ~{"COVERAGE_CAP=" + coverage_cap} \
-      INCLUDE_BQ_HISTOGRAM=true \
-      THEORETICAL_SENSITIVITY_OUTPUT=theoretical_sensitivity.txt
+        INPUT=~{input_bam} \
+        VALIDATION_STRINGENCY=SILENT \
+        REFERENCE_SEQUENCE=~{ref_fasta} \
+        OUTPUT=metrics.txt \
+        USE_FAST_ALGORITHM=true \
+        READ_LENGTH=~{read_length_for_optimization} \
+        ~{"COVERAGE_CAP=" + coverage_cap} \
+        INCLUDE_BQ_HISTOGRAM=true \
+        THEORETICAL_SENSITIVITY_OUTPUT=theoretical_sensitivity.txt
 
     R --vanilla <<CODE
       df = read.table("metrics.txt",skip=6,header=TRUE,stringsAsFactors=FALSE,sep='\t',nrows=1)
       write.table(floor(df[,"MEAN_COVERAGE"]), "mean_coverage.txt", quote=F, col.names=F, row.names=F)
     CODE
-  >>>
+  }
+  
   runtime {
     preemptible: select_first([preemptible_tries, 5])
     memory: "3 GB"
     disks: "local-disk " + disk_size + " HDD"
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.2-1552931386"
   }
+  
   output {
     File metrics = "metrics.txt"
     File theoretical_sensitivity = "theoretical_sensitivity.txt"
@@ -343,7 +346,7 @@ task LiftoverAndCombineVcfs {
     ref_fasta: "Original (not shifted) chrM reference"
     shift_back_chain: "Chain file to lift over from shifted reference to original chrM"
   }
-  command<<<
+  command {
     set -e
 
     java -jar /usr/gitc/picard.jar LiftoverVcf \
@@ -357,7 +360,8 @@ task LiftoverAndCombineVcfs {
       I=~{basename}.shifted_back.vcf \
       I=~{vcf} \
       O=~{basename}.final.vcf
-    >>>
+    }
+    
     runtime {
       disks: "local-disk " + disk_size + " HDD"
       memory: "1200 MB"
@@ -406,7 +410,8 @@ task M2 {
     input_bam: "Aligned Bam"
     gga_vcf: "VCF for genotype given alleles mode"
   }
-  command <<<
+
+  command {
       set -e
 
       export GATK_LOCAL_JAR=~{default="/root/gatk.jar" gatk_override}
@@ -425,7 +430,8 @@ task M2 {
         --mitochondria-mode \
         --max-reads-per-alignment-start 75 \
         --max-mnp-distance 0
-  >>>
+  }
+
   runtime {
       docker: "us.gcr.io/broad-gatk/gatk:4.1.1.0"
       memory: machine_mem + " MB"
@@ -433,6 +439,7 @@ task M2 {
       preemptible: select_first([preemptible_tries, 5])
       cpu: 2
   }
+
   output {
       File raw_vcf = "~{output_vcf}"
       File raw_vcf_idx = "~{output_vcf_index}"
@@ -482,7 +489,7 @@ task Filter {
       vaf_filter_threshold: "Hard cutoff for minimum allele fraction. All sites with VAF less than this cutoff will be filtered."
       f_score_beta: "F-Score beta balances the filtering strategy between recall and precision. The relative weight of recall to precision."
   }
-  command <<<
+  command {
       set -e
 
       export GATK_LOCAL_JAR=~{default="/root/gatk.jar" gatk_override}
@@ -490,7 +497,8 @@ task Filter {
       # We need to create these files regardless, even if they stay empty
       touch bamout.bam
 
-      gatk --java-options "-Xmx2500m" FilterMutectCalls -V ~{raw_vcf} \
+      gatk --java-options "-Xmx2500m" FilterMutectCalls \
+        -V ~{raw_vcf} \
         -R ~{ref_fasta} \
         -O filtered.vcf \
         --stats ~{raw_vcf_stats} \
@@ -502,12 +510,14 @@ task Filter {
         ~{"--f-score-beta " + f_score_beta} \
         --contamination-estimate ~{contamination}
 
-      gatk VariantFiltration -V filtered.vcf \
+      gatk VariantFiltration \
+        -V filtered.vcf \
         -O ~{output_vcf} \
         --mask ~{blacklisted_sites} \
         --mask-name "blacklisted_site"
 
-  >>>
+  }
+
   runtime {
       docker: "us.gcr.io/broad-gatk/gatk:4.1.1.0"
       memory: "4 MB"
@@ -515,6 +525,7 @@ task Filter {
       preemptible: select_first([preemptible_tries, 5])
       cpu: 2
   }
+
   output {
       File filtered_vcf = "~{output_vcf}"
       File filtered_vcf_idx = "~{output_vcf_index}"
@@ -529,16 +540,21 @@ task MergeStats {
     File? gatk_override
   }
 
-  command{
+  command {
     set -e
 
     export GATK_LOCAL_JAR=~{default="/root/gatk.jar" gatk_override}
 
-    gatk MergeMutectStats --stats ~{shifted_stats} --stats ~{non_shifted_stats} -O raw.combined.stats
+    gatk MergeMutectStats \
+      --stats ~{shifted_stats} \
+      --stats ~{non_shifted_stats} \
+      -O raw.combined.stats
   }
+
   output {
     File stats = "raw.combined.stats"
   }
+
   runtime {
       docker: "us.gcr.io/broad-gatk/gatk:4.1.1.0"
       memory: "3 MB"

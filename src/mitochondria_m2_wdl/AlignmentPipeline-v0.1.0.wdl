@@ -89,68 +89,69 @@ task AlignAndMarkDuplicates {
   Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_amb, "GB") + size(ref_ann, "GB") + size(ref_bwt, "GB") + size(ref_pac, "GB") + size(ref_sa, "GB")
   Int disk_size = ceil(size(input_bam, "GB") * 4 + ref_size) + 20
 
-  command <<<
+  command {
     set -o pipefail
     set -e
 
     # set the bash variable needed for the command-line
     bash_ref_fasta=~{ref_fasta}
+    
     java -Xms5000m -jar /usr/gitc/picard.jar \
       SamToFastq \
-      INPUT=~{input_bam} \
-      FASTQ=/dev/stdout \
-      INTERLEAVE=true \
-      NON_PF=true | \
+        INPUT=~{input_bam} \
+        FASTQ=/dev/stdout \
+        INTERLEAVE=true \
+        NON_PF=true | \
     /usr/gitc/~{bwa_commandline} /dev/stdin - 2> >(tee ~{output_bam_basename}.bwa.stderr.log >&2) | \
     java -Xms3000m -jar /usr/gitc/picard.jar \
       MergeBamAlignment \
-      VALIDATION_STRINGENCY=SILENT \
-      EXPECTED_ORIENTATIONS=FR \
-      ATTRIBUTES_TO_RETAIN=X0 \
-      ATTRIBUTES_TO_REMOVE=NM \
-      ATTRIBUTES_TO_REMOVE=MD \
-      ALIGNED_BAM=/dev/stdin \
-      UNMAPPED_BAM=~{input_bam} \
-      OUTPUT=mba.bam \
-      REFERENCE_SEQUENCE=~{ref_fasta} \
-      PAIRED_RUN=true \
-      SORT_ORDER="unsorted" \
-      IS_BISULFITE_SEQUENCE=false \
-      ALIGNED_READS_ONLY=false \
-      CLIP_ADAPTERS=false \
-      MAX_RECORDS_IN_RAM=2000000 \
-      ADD_MATE_CIGAR=true \
-      MAX_INSERTIONS_OR_DELETIONS=-1 \
-      PRIMARY_ALIGNMENT_STRATEGY=MostDistant \
-      PROGRAM_RECORD_ID="bwamem" \
-      PROGRAM_GROUP_VERSION="~{bwa_version}" \
-      PROGRAM_GROUP_COMMAND_LINE="~{bwa_commandline}" \
-      PROGRAM_GROUP_NAME="bwamem" \
-      UNMAPPED_READ_STRATEGY=COPY_TO_TAG \
-      ALIGNER_PROPER_PAIR_FLAGS=true \
-      UNMAP_CONTAMINANT_READS=true \
-      ADD_PG_TAG_TO_READS=false
+        VALIDATION_STRINGENCY=SILENT \
+        EXPECTED_ORIENTATIONS=FR \
+        ATTRIBUTES_TO_RETAIN=X0 \
+        ATTRIBUTES_TO_REMOVE=NM \
+        ATTRIBUTES_TO_REMOVE=MD \
+        ALIGNED_BAM=/dev/stdin \
+        UNMAPPED_BAM=~{input_bam} \
+        OUTPUT=mba.bam \
+        REFERENCE_SEQUENCE=~{ref_fasta} \
+        PAIRED_RUN=true \
+        SORT_ORDER="unsorted" \
+        IS_BISULFITE_SEQUENCE=false \
+        ALIGNED_READS_ONLY=false \
+        CLIP_ADAPTERS=false \
+        MAX_RECORDS_IN_RAM=2000000 \
+        ADD_MATE_CIGAR=true \
+        MAX_INSERTIONS_OR_DELETIONS=-1 \
+        PRIMARY_ALIGNMENT_STRATEGY=MostDistant \
+        PROGRAM_RECORD_ID="bwamem" \
+        PROGRAM_GROUP_VERSION="~{bwa_version}" \
+        PROGRAM_GROUP_COMMAND_LINE="~{bwa_commandline}" \
+        PROGRAM_GROUP_NAME="bwamem" \
+        UNMAPPED_READ_STRATEGY=COPY_TO_TAG \
+        ALIGNER_PROPER_PAIR_FLAGS=true \
+        UNMAP_CONTAMINANT_READS=true \
+        ADD_PG_TAG_TO_READS=false
 
     java -Xms4000m -jar /usr/gitc/picard.jar \
       MarkDuplicates \
-      INPUT=mba.bam \
-      OUTPUT=md.bam \
-      METRICS_FILE=~{metrics_filename} \
-      VALIDATION_STRINGENCY=SILENT \
-      ~{"READ_NAME_REGEX=" + read_name_regex} \
-      OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500 \
-      ASSUME_SORT_ORDER="queryname" \
-      CLEAR_DT="false" \
-      ADD_PG_TAG_TO_READS=false
+        INPUT=mba.bam \
+        OUTPUT=md.bam \
+        METRICS_FILE=~{metrics_filename} \
+        VALIDATION_STRINGENCY=SILENT \
+        ~{"READ_NAME_REGEX=" + read_name_regex} \
+        OPTICAL_DUPLICATE_PIXEL_DISTANCE=2500 \
+        ASSUME_SORT_ORDER="queryname" \
+        CLEAR_DT="false" \
+        ADD_PG_TAG_TO_READS=false
 
     java -Xms4000m -jar /usr/gitc/picard.jar \
       SortSam \
-      INPUT=md.bam \
-      OUTPUT=~{output_bam_basename}.bam \
-      SORT_ORDER="coordinate" \
-      CREATE_INDEX=true \
-      MAX_RECORDS_IN_RAM=300000
-  >>>
+        INPUT=md.bam \
+        OUTPUT=~{output_bam_basename}.bam \
+        SORT_ORDER="coordinate" \
+        CREATE_INDEX=true \
+        MAX_RECORDS_IN_RAM=300000
+  }
   
   runtime {
     preemptible: select_first([preemptible_tries, 5])
