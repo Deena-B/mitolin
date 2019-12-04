@@ -91,6 +91,7 @@ name=${namewext%'.bam'}
     ## Inputs must be coordinate sorted
 
 # below currently only processes one of the two lists of samples
+# I processed both lists by changing the variables, see commit history
 gatk MarkDuplicates \
     -I $path2ummgbam$name'.bam' \
     -O $path2dupsmarked$name'.bam' \
